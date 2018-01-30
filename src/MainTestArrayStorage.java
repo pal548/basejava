@@ -23,8 +23,10 @@ public class MainTestArrayStorage {
 
         printAll();
         ARRAY_STORAGE.delete(r1.uuid);
+        System.out.println("Deleted r1");
         printAll();
         ARRAY_STORAGE.clear();
+        System.out.println("Cleared");
         printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
