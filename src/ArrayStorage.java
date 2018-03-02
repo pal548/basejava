@@ -13,6 +13,15 @@ public class ArrayStorage {
         size = 0;
     }
 
+    private int find(String uuid) {
+        for(int i = 0; i < size; i++) {
+            if (storage[i].uuid == uuid) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     void save(Resume r) {
         if(size < storage.length) {
             storage[size] = r;
@@ -22,27 +31,28 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        for(int i = 0; i < size; i++) {
-            if (storage[i].uuid == uuid) {
-                return storage[i];
-            }
+        int i = find(uuid);
+        if (i > -1) {
+            return storage[i];
+        } else {
+            return null;
         }
-        return null;
     }
 
     void delete(String uuid) {
-        if(size == 0) return;
-        for(int i = 0; i < size; i++) {
-            if (storage[i].uuid == uuid) {
-                // на место удаляемого переносим последний элемент
-                size--;
-                if(i < size) {
-                    storage[i] = storage[size];
-                }
-                storage[size] = null;
-                break;
+        int i = find(uuid);
+        if (i > -1) {
+            // на место удаляемого переносим последний элемент
+            size--;
+            if(i < size) {
+                storage[i] = storage[size];
             }
+            storage[size] = null;
         }
+    }
+
+    void update(String uuid, Resume r) {
+
     }
 
     /**
