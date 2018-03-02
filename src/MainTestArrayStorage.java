@@ -22,9 +22,15 @@ public class MainTestArrayStorage {
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));
 
         printAll();
+
         ARRAY_STORAGE.delete(r1.uuid);
         System.out.println("Deleted r1");
         printAll();
+
+        ARRAY_STORAGE.update("uuid2", new Resume("uuid4"));
+        System.out.println("Updated uuid2 to uuid4");
+        printAll();
+
         ARRAY_STORAGE.clear();
         System.out.println("Cleared");
         printAll();
@@ -37,6 +43,6 @@ public class MainTestArrayStorage {
         for (Resume r : ARRAY_STORAGE.getAll()) {
             System.out.println(r);
         }
-        System.out.println("\n");
+        System.out.println("");
     }
 }

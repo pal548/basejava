@@ -52,7 +52,10 @@ public class ArrayStorage {
     }
 
     void update(String uuid, Resume r) {
-
+        int i = find(uuid);
+        if (i > -1) {
+            storage[i] = r;
+        }
     }
 
     /**
