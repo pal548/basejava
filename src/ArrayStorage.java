@@ -26,6 +26,8 @@ public class ArrayStorage {
         if(size < storage.length) {
             storage[size] = r;
             size++;
+        } else {
+            System.out.println("Save error: storage is full");
         }
 
     }

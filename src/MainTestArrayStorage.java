@@ -43,6 +43,12 @@ public class MainTestArrayStorage {
         System.out.println("Cleared");
         printAll();
 
+        System.out.println("Trying to fill entire storage");
+        for(int i = 1; i <= 10002; i++) {
+            ARRAY_STORAGE.save(new Resume("uuid"+i));
+        }
+
+
         System.out.println("Size: " + ARRAY_STORAGE.size());
     }
 
