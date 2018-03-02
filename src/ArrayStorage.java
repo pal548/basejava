@@ -35,6 +35,7 @@ public class ArrayStorage {
         if (i > -1) {
             return storage[i];
         } else {
+            System.out.println("Get resume error: resume with uuid \"" + uuid + "\" not found");
             return null;
         }
     }
@@ -48,6 +49,8 @@ public class ArrayStorage {
                 storage[i] = storage[size];
             }
             storage[size] = null;
+        } else {
+            System.out.println("Delete error: resume with uuid \"" + uuid + "\" not found");
         }
     }
 
@@ -55,6 +58,8 @@ public class ArrayStorage {
         int i = find(uuid);
         if (i > -1) {
             storage[i] = r;
+        } else {
+            System.out.println("Update error: resume with uuid \"" + uuid + "\" not found");
         }
     }
 

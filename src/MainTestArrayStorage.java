@@ -27,6 +27,14 @@ public class MainTestArrayStorage {
         System.out.println("Deleted r1");
         printAll();
 
+        System.out.println("Trying to delete resume with uuid \"uuid4\"");
+        ARRAY_STORAGE.delete("uuid4");
+        printAll();
+
+        System.out.println("Trying to update resume with uuid \"uuid4\" to resume with uuid \"uuid5\"");
+        ARRAY_STORAGE.update("uuid4", new Resume("uuid5"));
+        printAll();
+
         ARRAY_STORAGE.update("uuid2", new Resume("uuid4"));
         System.out.println("Updated uuid2 to uuid4");
         printAll();
