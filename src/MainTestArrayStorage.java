@@ -32,12 +32,12 @@ public class MainTestArrayStorage {
         ARRAY_STORAGE.delete("uuid4");
         printAll();
 
-        System.out.println("Trying to update resume with uuid \"uuid4\" to resume with uuid \"uuid5\"");
-        ARRAY_STORAGE.update("uuid4", new Resume("uuid5"));
+        System.out.println("Trying to update resume with uuid \"uuid4\"");
+        ARRAY_STORAGE.update(new Resume("uuid4"));
         printAll();
 
-        ARRAY_STORAGE.update("uuid2", new Resume("uuid4"));
-        System.out.println("Updated uuid2 to uuid4");
+        ARRAY_STORAGE.update(new Resume("uuid2"));
+        System.out.println("Updated uuid2");
         printAll();
 
         ARRAY_STORAGE.clear();

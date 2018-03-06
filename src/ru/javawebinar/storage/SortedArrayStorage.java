@@ -23,12 +23,6 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         size--;
     }
 
-    protected void updateInternal(int i, Resume r) {
-        storage[i] = r;
-        sortStorage();
-    }
-
-
     protected int find(String uuid) {
         return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
     }

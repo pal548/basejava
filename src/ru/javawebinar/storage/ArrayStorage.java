@@ -23,10 +23,6 @@ public class ArrayStorage extends AbstractArrayStorage {
         storage[size] = null;
     }
 
-    protected void updateInternal(int i, Resume r) {
-        storage[i] = r;
-    }
-
     protected int find(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {

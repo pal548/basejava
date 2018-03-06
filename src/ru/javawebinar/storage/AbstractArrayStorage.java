@@ -51,16 +51,12 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
-    public void update(String uuid, Resume r) {
-        if (find(r.getUuid()) > -1) {
-            System.out.println("Update error: resume with uuid \"" + r.getUuid() + "\" is already in storage");
-            return;
-        }
-        int i = find(uuid);
-        if (i > -1) {
-            updateInternal(i, r);
+    public void update(Resume r) {
+        int i = find(r.getUuid());
+        if (i < 0) {
+            System.out.println("Update error: resume with uuid \"" + r.getUuid() + "\" not found");
         } else {
-            System.out.println("Update error: resume with uuid \"" + uuid + "\" not found");
+            storage[i] = r;
         }
     }
 
@@ -80,6 +76,4 @@ public abstract class AbstractArrayStorage implements Storage {
     protected abstract void saveInternal(Resume r);
 
     protected abstract void deleteInternal(int i);
-
-    protected abstract void updateInternal(int i, Resume r);
 }
