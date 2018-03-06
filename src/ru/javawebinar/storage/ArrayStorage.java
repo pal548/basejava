@@ -1,24 +1,18 @@
+package ru.javawebinar.storage;
+
+import ru.javawebinar.model.Resume;
+
 import java.util.Arrays;
 
 /**
  * Array based storage for Resumes
  */
-public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    private int size = 0;
+public class ArrayStorage extends AbstractArrayStorage {
 
-    void clear() {
-        for (int i = 0; i < size; i++) {
-            storage[i] = null;
-        }
-        size = 0;
-    }
-
-    void save(Resume r) {
+    public void save(Resume r) {
         if (size < storage.length) {
-            int i = find(r.uuid);
-            if (i > -1) {
-                System.out.printf("Save error: resume is already in storage");
+            if (find(r.getUuid()) > -1) {
+                System.out.println("Save error: resume is already in storage");
                 return;
             }
             storage[size] = r;
@@ -29,17 +23,7 @@ public class ArrayStorage {
 
     }
 
-    Resume get(String uuid) {
-        int i = find(uuid);
-        if (i > -1) {
-            return storage[i];
-        } else {
-            System.out.println("Get resume error: resume with uuid \"" + uuid + "\" not found");
-            return null;
-        }
-    }
-
-    void delete(String uuid) {
+    public void delete(String uuid) {
         int i = find(uuid);
         if (i > -1) {
             // на место удаляемого переносим последний элемент
@@ -53,7 +37,7 @@ public class ArrayStorage {
         }
     }
 
-    void update(String uuid, Resume r) {
+    public void update(String uuid, Resume r) {
         int i = find(uuid);
         if (i > -1) {
             storage[i] = r;
@@ -62,20 +46,9 @@ public class ArrayStorage {
         }
     }
 
-    /**
-     * @return array, contains only Resumes in storage (without null)
-     */
-    Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
-
-    int size() {
-        return size;
-    }
-
-    private int find(String uuid) {
+    protected int find(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid == uuid) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
