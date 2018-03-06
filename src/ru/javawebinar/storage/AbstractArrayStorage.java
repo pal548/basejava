@@ -31,15 +31,14 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     public void save(Resume r) {
-        if (size < storage.length) {
-            if (find(r.getUuid()) > -1) {
-                System.out.println("Save error: resume is already in storage");
-                return;
-            }
-            saveInternal(r);
-        } else {
+        if (size >= storage.length) {
             System.out.println("Save error: storage is full");
+        } else if (find(r.getUuid()) > -1) {
+            System.out.println("Save error: resume is already in storage");
+        } else {
+            saveInternal(r);
         }
+
     }
 
     public void delete(String uuid) {

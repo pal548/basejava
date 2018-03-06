@@ -1,9 +1,10 @@
 import ru.javawebinar.model.Resume;
 import ru.javawebinar.storage.SortedArrayStorage;
 import ru.javawebinar.storage.Storage;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Test for com.urise.webapp.storage.ru.javawebinar.storage.ArrayStorage
+ * Test for ru.javawebinar.storage.ArrayStorage
  */
 public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new SortedArrayStorage();
@@ -16,6 +17,13 @@ public class MainTestArrayStorage {
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
         ARRAY_STORAGE.save(r3);
+        ARRAY_STORAGE.save(new Resume("4"));
+        ARRAY_STORAGE.save(new Resume("9"));
+        ARRAY_STORAGE.save(new Resume("7"));
+        ARRAY_STORAGE.save(new Resume("8"));
+        ARRAY_STORAGE.save(new Resume("3"));
+        ARRAY_STORAGE.save(new Resume("uuid4"));
+
 
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
         System.out.println("Size: " + ARRAY_STORAGE.size());
@@ -46,9 +54,9 @@ public class MainTestArrayStorage {
 
         System.out.println("Trying to fill entire storage");
         for(int i = 1; i <= 10002; i++) {
-            ARRAY_STORAGE.save(new Resume("uuid"+i));
+            ARRAY_STORAGE.save(new Resume(String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000))));
         }
-
+        printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
     }

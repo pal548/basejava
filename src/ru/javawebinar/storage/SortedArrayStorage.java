@@ -10,9 +10,28 @@ import java.util.Arrays;
 public class SortedArrayStorage extends AbstractArrayStorage {
 
     protected void saveInternal(Resume r) {
-        storage[size] = r;
+        int low = 0;
+        int high = size - 1;
+
+        while (low < high) {
+            int mid = (low + high) >>> 1;
+
+            int cmp = storage[mid].compareTo(r);
+
+            if (cmp <= 0)
+                low = mid + 1;
+            else
+                high = mid - 1;
+        }
+        // low = high
+        for (int j = size; j > low; j--) {
+            storage[j] = storage[j-1];
+        }
+        if (size == 0 || r.compareTo(storage[low]) < 0)
+            storage[low] = r;
+        else
+            storage[low+1] = r;
         size++;
-        sortStorage();
     }
 
     protected void deleteInternal(int i) {
