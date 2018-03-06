@@ -9,19 +9,31 @@ import java.util.Arrays;
  */
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    public void save(Resume r) {
-        //TODO
+    protected void saveInternal(Resume r) {
+        storage[size] = r;
+        size++;
+        sortStorage();
     }
 
-    public void delete(String uuid) {
-        //TODO
+    protected void deleteInternal(int i) {
+        for (int j = i; j < size - 1; j++) {
+            storage[j] = storage[j + 1];
+        }
+        storage[size - 1] = null;
+        size--;
     }
 
-    public void update(String uuid, Resume r) {
-        //TODO
+    protected void updateInternal(int i, Resume r) {
+        storage[i] = r;
+        sortStorage();
     }
+
 
     protected int find(String uuid) {
         return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
+    }
+
+    private void sortStorage() {
+        Arrays.sort(storage, 0, size);
     }
 }

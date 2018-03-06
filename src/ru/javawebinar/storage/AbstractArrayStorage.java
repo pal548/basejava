@@ -30,6 +30,40 @@ public abstract class AbstractArrayStorage implements Storage {
         }
     }
 
+    public void save(Resume r) {
+        if (size < storage.length) {
+            if (find(r.getUuid()) > -1) {
+                System.out.println("Save error: resume is already in storage");
+                return;
+            }
+            saveInternal(r);
+        } else {
+            System.out.println("Save error: storage is full");
+        }
+    }
+
+    public void delete(String uuid) {
+        int i = find(uuid);
+        if (i > -1) {
+            deleteInternal(i);
+        } else {
+            System.out.println("Delete error: resume with uuid \"" + uuid + "\" not found");
+        }
+    }
+
+    public void update(String uuid, Resume r) {
+        if (find(r.getUuid()) > -1) {
+            System.out.println("Update error: resume with uuid \"" + r.getUuid() + "\" is already in storage");
+            return;
+        }
+        int i = find(uuid);
+        if (i > -1) {
+            updateInternal(i, r);
+        } else {
+            System.out.println("Update error: resume with uuid \"" + uuid + "\" not found");
+        }
+    }
+
     /**
      * @return array, contains only Resumes in storage (without null)
      */
@@ -42,4 +76,10 @@ public abstract class AbstractArrayStorage implements Storage {
     }
 
     protected abstract int find(String uuid);
+
+    protected abstract void saveInternal(Resume r);
+
+    protected abstract void deleteInternal(int i);
+
+    protected abstract void updateInternal(int i, Resume r);
 }
