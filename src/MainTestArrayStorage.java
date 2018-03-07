@@ -15,6 +15,8 @@ public class MainTestArrayStorage {
         Resume r3 = new Resume("uuid3");
 
         ARRAY_STORAGE.save(r1);
+        ARRAY_STORAGE.delete(r1.getUuid());
+        ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
         ARRAY_STORAGE.save(r3);
         ARRAY_STORAGE.save(new Resume("4"));

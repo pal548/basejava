@@ -24,29 +24,21 @@ public class SortedArrayStorage extends AbstractArrayStorage {
                 high = mid - 1;
         }
         // low = high
-        for (int j = size; j > low; j--) {
-            storage[j] = storage[j-1];
-        }
+        System.arraycopy(storage, low, storage, low + 1, size - low);
         if (size == 0 || r.compareTo(storage[low]) < 0)
             storage[low] = r;
         else
-            storage[low+1] = r;
+            storage[low + 1] = r;
         size++;
     }
 
     protected void deleteInternal(int i) {
-        for (int j = i; j < size - 1; j++) {
-            storage[j] = storage[j + 1];
-        }
+        System.arraycopy(storage, i+1, storage, i, size - i - 1);
         storage[size - 1] = null;
         size--;
     }
 
     protected int find(String uuid) {
         return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
-    }
-
-    private void sortStorage() {
-        Arrays.sort(storage, 0, size);
     }
 }
