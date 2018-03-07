@@ -9,31 +9,15 @@ import java.util.Arrays;
  */
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    protected void saveInternal(Resume r) {
-        int low = 0;
-        int high = size - 1;
-
-        while (low < high) {
-            int mid = (low + high) >>> 1;
-
-            int cmp = storage[mid].compareTo(r);
-
-            if (cmp <= 0)
-                low = mid + 1;
-            else
-                high = mid - 1;
-        }
-        // low = high
-        System.arraycopy(storage, low, storage, low + 1, size - low);
-        if (size == 0 || r.compareTo(storage[low]) < 0)
-            storage[low] = r;
-        else
-            storage[low + 1] = r;
+    protected void saveInternal(Resume r, int i) {
+        i = -i - 1; // преобразуем результат Arrays.binarySearch в индекс
+        System.arraycopy(storage, i, storage, i + 1, size - i);
+        storage[i] = r;
         size++;
     }
 
     protected void deleteInternal(int i) {
-        System.arraycopy(storage, i+1, storage, i, size - i - 1);
+        System.arraycopy(storage, i + 1, storage, i, size - i - 1);
         storage[size - 1] = null;
         size--;
     }

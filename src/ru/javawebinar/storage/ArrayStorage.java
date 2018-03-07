@@ -9,7 +9,7 @@ import java.util.Arrays;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
-    protected void saveInternal(Resume r) {
+    protected void saveInternal(Resume r, int i) {
         storage[size] = r;
         size++;
     }

@@ -31,10 +31,13 @@ public abstract class AbstractArrayStorage implements Storage {
     public void save(Resume r) {
         if (size >= storage.length) {
             System.out.println("Save error: storage is full");
-        } else if (find(r.getUuid()) > -1) {
+            return;
+        }
+        int i = find(r.getUuid());
+        if (i > -1) {
             System.out.println("Save error: resume is already in storage");
         } else {
-            saveInternal(r);
+            saveInternal(r, i);
         }
 
     }
@@ -70,7 +73,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int find(String uuid);
 
-    protected abstract void saveInternal(Resume r);
+    protected abstract void saveInternal(Resume r, int i);
 
     protected abstract void deleteInternal(int i);
 }
