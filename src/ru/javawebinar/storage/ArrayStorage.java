@@ -11,16 +11,11 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     protected void saveInternal(Resume r, int i) {
         storage[size] = r;
-        size++;
     }
 
     protected void deleteInternal(int i) {
         // на место удаляемого переносим последний элемент
-        size--;
-        if (i < size) {
-            storage[i] = storage[size];
-        }
-        storage[size] = null;
+        storage[i] = storage[size - 1];
     }
 
     protected int find(String uuid) {

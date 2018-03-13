@@ -13,13 +13,10 @@ public class SortedArrayStorage extends AbstractArrayStorage {
         i = -i - 1; // преобразуем результат Arrays.binarySearch в индекс
         System.arraycopy(storage, i, storage, i + 1, size - i);
         storage[i] = r;
-        size++;
     }
 
     protected void deleteInternal(int i) {
         System.arraycopy(storage, i + 1, storage, i, size - i - 1);
-        storage[size - 1] = null;
-        size--;
     }
 
     protected int find(String uuid) {
