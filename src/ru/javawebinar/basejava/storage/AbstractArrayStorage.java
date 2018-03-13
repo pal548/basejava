@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.AlreadyExistsException;
+import ru.javawebinar.basejava.exception.NotFoundException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
@@ -23,19 +26,17 @@ public abstract class AbstractArrayStorage implements Storage {
         if (i > -1) {
             return storage[i];
         } else {
-            System.out.println("Get resume error: resume with uuid \"" + uuid + "\" not found");
-            return null;
+            throw new NotFoundException(uuid);
         }
     }
 
     public void save(Resume r) {
         if (size >= storage.length) {
-            System.out.println("Save error: storage is full");
-            return;
+            throw new StorageException("Save error: storage is full", r.getUuid());
         }
         int i = find(r.getUuid());
         if (i > -1) {
-            System.out.println("Save error: resume is already in storage");
+            throw new AlreadyExistsException(r.getUuid());
         } else {
             saveInternal(r, i);
             size++;
@@ -50,14 +51,14 @@ public abstract class AbstractArrayStorage implements Storage {
             storage[size - 1] = null;
             size--;
         } else {
-            System.out.println("Delete error: resume with uuid \"" + uuid + "\" not found");
+            throw new NotFoundException(uuid);
         }
     }
 
     public void update(Resume r) {
         int i = find(r.getUuid());
         if (i < 0) {
-            System.out.println("Update error: resume with uuid \"" + r.getUuid() + "\" not found");
+            throw new NotFoundException(r.getUuid());
         } else {
             storage[i] = r;
         }
