@@ -1,10 +1,12 @@
-import ru.javawebinar.model.Resume;
-import ru.javawebinar.storage.SortedArrayStorage;
-import ru.javawebinar.storage.Storage;
+package ru.javawebinar.basejava;
+
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.storage.SortedArrayStorage;
+import ru.javawebinar.basejava.storage.Storage;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Test for ru.javawebinar.storage.ArrayStorage
+ * Test for ru.javawebinar.basejava.storage.ArrayStorage
  */
 public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new SortedArrayStorage();
