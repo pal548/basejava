@@ -2,6 +2,9 @@ package ru.javawebinar.basejava.storage;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.javawebinar.basejava.exception.AlreadyExistsException;
+import ru.javawebinar.basejava.exception.NotFoundException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 
 import static org.junit.Assert.*;
@@ -31,22 +34,63 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void clear() throws Exception {
+        storage.clear();
+        assertEquals(0, storage.size());
     }
 
     @Test
-    public void get() throws Exception {
+    public void testGetSave() throws Exception {
+        Resume r = new Resume();
+        storage.save(r);
+        assertEquals(r, storage.get(r.getUuid()));
+        storage.delete(r.getUuid());
+    }
+
+    @Test(expected = AlreadyExistsException.class)
+    public void saveAlreadyExists() {
+        Resume r = new Resume(UUID_1);
+        storage.save(r);
     }
 
     @Test
-    public void save() throws Exception {
+    public void saveOverflow() throws Exception {
+        fillRandom();
+        boolean gotException = false;
+        try {
+            storage.save(new Resume());
+        } catch (StorageException e) {
+            gotException = true;
+        }
+        setUp();
+        assertTrue(gotException);
     }
 
     @Test
     public void delete() throws Exception {
+        Resume r = new Resume();
+        storage.save(r);
+        assertNotNull(storage.get(r.getUuid()));
+        storage.delete(r.getUuid());
+        boolean notFound = false;
+        try {
+            storage.get(r.getUuid());
+        } catch (NotFoundException e) {
+            notFound = true;
+        }
+        assertTrue(notFound);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteNotExisted() {
+        Resume r = new Resume();
+        storage.delete(r.getUuid());
     }
 
     @Test
     public void update() throws Exception {
+        Resume r = new Resume(UUID_1);
+        storage.update(r);
+        assertTrue(storage.get(r.getUuid()) == r);
     }
 
     @Test
@@ -60,10 +104,13 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void size() throws Exception {
+        assertEquals(storage.size(),  3);
     }
 
-    @Test
-    public void find() throws Exception {
+    protected void fillRandom() {
+        storage.clear();
+        for(int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
+            storage.save(new Resume());
+        }
     }
-
 }
