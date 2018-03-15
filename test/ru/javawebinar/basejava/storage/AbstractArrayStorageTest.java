@@ -43,7 +43,6 @@ public abstract class AbstractArrayStorageTest {
         Resume r = new Resume();
         storage.save(r);
         assertEquals(r, storage.get(r.getUuid()));
-        storage.delete(r.getUuid());
     }
 
     @Test(expected = AlreadyExistsException.class)
@@ -61,7 +60,6 @@ public abstract class AbstractArrayStorageTest {
         } catch (StorageException e) {
             gotException = true;
         }
-        setUp();
         assertTrue(gotException);
     }
 
