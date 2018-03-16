@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javawebinar.basejava.exception.AlreadyExistsException;
@@ -16,9 +17,9 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
-    Resume r1 = new Resume(UUID_1);
-    Resume r2 = new Resume(UUID_2);
-    Resume r3 = new Resume(UUID_3);
+    private static final Resume r1 = new Resume(UUID_1);
+    private static final Resume r2 = new Resume(UUID_2);
+    private static final Resume r3 = new Resume(UUID_3);
 
     public AbstractArrayStorageTest(Storage storage) {
         this.storage = storage;
@@ -51,31 +52,20 @@ public abstract class AbstractArrayStorageTest {
         storage.save(r);
     }
 
-    @Test
+    @Test(expected = StorageException.class)
     public void saveOverflow() throws Exception {
-        fillRandom();
-        boolean gotException = false;
         try {
-            storage.save(new Resume());
+            fillRandom();
         } catch (StorageException e) {
-            gotException = true;
+            fail();
         }
-        assertTrue(gotException);
+        storage.save(new Resume());
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void delete() throws Exception {
-        Resume r = new Resume();
-        storage.save(r);
-        assertNotNull(storage.get(r.getUuid()));
-        storage.delete(r.getUuid());
-        boolean notFound = false;
-        try {
-            storage.get(r.getUuid());
-        } catch (NotFoundException e) {
-            notFound = true;
-        }
-        assertTrue(notFound);
+        storage.delete(r1.getUuid());
+        storage.get(r1.getUuid());
     }
 
     @Test(expected = NotFoundException.class)
