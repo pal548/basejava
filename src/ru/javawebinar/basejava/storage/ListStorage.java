@@ -5,16 +5,15 @@ import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage {
     private List<Resume> list = new ArrayList<>();
-    private int size = 0;
 
     @Override
     public void clear() {
         list.clear();
-        size = 0;
     }
 
     @Override
@@ -33,33 +32,39 @@ public class ListStorage extends AbstractStorage {
                 throw new AlreadyExistsException(r.getUuid());
         }
         list.add(r);
-        size++;
     }
 
     @Override
     public void delete(String uuid) {
         if (!list.removeIf((r) -> r.getUuid().equals(uuid)))
             throw new NotFoundException(uuid);
-        size--;
     }
 
     @Override
     public void update(Resume r) {
-        for (Resume re : list) {
-            if (re.getUuid().equals(r.getUuid())) {
-                
+        Iterator<Resume> iterator = list.iterator();
+        boolean found = false;
+        while (iterator.hasNext()) {
+            Resume ri = iterator.next();
+            if (ri.getUuid().equals(r.getUuid())) {
+                iterator.remove();
+                found = true;
+                break;
             }
         }
+        if (found)
+            list.add(r);
+        else
+            throw new NotFoundException(r.getUuid());
     }
 
     @Override
     public Resume[] getAll() {
-        Resume[] res = new Resume[list.size()];
-        return list.toArray(res);
+        return list.toArray(new Resume[list.size()]);
     }
 
     @Override
     public int size() {
-        return size;
+        return list.size();
     }
 }
