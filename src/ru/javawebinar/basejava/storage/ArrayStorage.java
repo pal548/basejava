@@ -7,16 +7,19 @@ import ru.javawebinar.basejava.model.Resume;
  */
 public class ArrayStorage extends AbstractArrayStorage {
 
-    protected void saveInternal(Resume r, int i) {
+    @Override
+    protected void saveInternalInternal(Resume r, int i) {
         storage[size] = r;
     }
 
-    protected void deleteInternal(int i) {
+    @Override
+    protected void deleteInternalInternal(int i) {
         // на место удаляемого переносим последний элемент
         storage[i] = storage[size - 1];
     }
 
-    protected int find(String uuid) {
+    @Override
+    protected Integer find(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;

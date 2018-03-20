@@ -9,16 +9,16 @@ import ru.javawebinar.basejava.model.Resume;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class AbstractStorageTest {
+public abstract class AbstractStorageTest {
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
-    private static final Resume r1 = new Resume(UUID_1);
-    private static final Resume r2 = new Resume(UUID_2);
-    private static final Resume r3 = new Resume(UUID_3);
+    protected static final Resume r1 = new Resume(UUID_1);
+    protected static final Resume r2 = new Resume(UUID_2);
+    protected static final Resume r3 = new Resume(UUID_3);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -81,6 +81,6 @@ public class AbstractStorageTest {
 
     @Test
     public void size() throws Exception {
-        assertEquals(storage.size(),  3);
+        assertEquals(3, storage.size());
     }
 }

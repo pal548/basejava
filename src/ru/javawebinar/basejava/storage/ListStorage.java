@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListStorage extends AbstractStorage {
+public class ListStorage extends AbstractStorage<Integer> {
     private List<Resume> list = new ArrayList<>();
 
     @Override
@@ -35,9 +35,8 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public void delete(String uuid) {
-        if (!list.removeIf((r) -> r.getUuid().equals(uuid)))
-            throw new NotFoundException(uuid);
+    public void deleteInternal(Integer i) {
+        list.remove(i.intValue());
     }
 
     @Override
@@ -66,5 +65,30 @@ public class ListStorage extends AbstractStorage {
     @Override
     public int size() {
         return list.size();
+    }
+
+    @Override
+    protected Integer find(String uuid) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getUuid().equals(uuid)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    protected Resume getByIndex(Integer index) {
+        return list.get(index);
+    }
+
+    @Override
+    protected boolean checkIndex(Integer index) {
+        return index > -1;
+    }
+
+    @Override
+    protected void saveInternal(Resume r, Integer integer) {
+        list.add(r);
     }
 }

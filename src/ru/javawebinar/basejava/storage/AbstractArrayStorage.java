@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
@@ -9,49 +8,47 @@ import java.util.Arrays;
 /**
  * Array based storage for Resumes
  */
-public abstract class AbstractArrayStorage extends AbstractStorage {
+public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     public static final int STORAGE_LIMIT = 10000;
 
     protected Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
+    @Override
     public void clear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public Resume get(String uuid) {
-        int i = find(uuid);
-        if (i > -1) {
-            return storage[i];
-        } else {
-            throw new NotFoundException(uuid);
-        }
+    @Override
+    protected boolean checkIndex(Integer index) {
+        return index > -1;
     }
 
+    @Override
+    protected Resume getByIndex(Integer index) {
+        return storage[index];
+    }
+
+    @Override
     public void save(Resume r) {
         if (size >= storage.length) {
             throw new StorageException("Save error: storage is full", r.getUuid());
         }
-        int i = find(r.getUuid());
-        if (i > -1) {
-            throw new AlreadyExistsException(r.getUuid());
-        } else {
-            saveInternal(r, i);
-            size++;
-        }
-
+        super.save(r);
     }
 
-    public void delete(String uuid) {
-        int i = find(uuid);
-        if (i > -1) {
-            deleteInternal(i);
-            storage[size - 1] = null;
-            size--;
-        } else {
-            throw new NotFoundException(uuid);
-        }
+    @Override
+    protected void saveInternal(Resume r, Integer i) {
+        saveInternalInternal(r, i);
+        size++;
+    }
+
+    @Override
+    public void deleteInternal(Integer i) {
+        deleteInternalInternal(i);
+        storage[size - 1] = null;
+        size--;
     }
 
     public void update(Resume r) {
@@ -74,9 +71,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         return size;
     }
 
-    protected abstract int find(String uuid);
+    protected abstract void saveInternalInternal(Resume r, int i);
 
-    protected abstract void saveInternal(Resume r, int i);
-
-    protected abstract void deleteInternal(int i);
+    protected abstract void deleteInternalInternal(int i);
 }

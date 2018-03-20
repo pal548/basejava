@@ -1,21 +1,42 @@
 package ru.javawebinar.basejava.storage;
 
+import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
-public abstract class AbstractStorage implements Storage {
+public abstract class AbstractStorage<I> implements Storage {
 
     @Override
     public abstract void clear();
 
     @Override
-    public abstract Resume get(String uuid);
+    public Resume get(String uuid) {
+        I index = find(uuid);
+        if (checkIndex(index))
+            return getByIndex(index);
+        else
+            throw new NotFoundException(uuid);
+    }
 
     @Override
-    public abstract void save(Resume r);
+    public void save(Resume r) {
+        I i = find(r.getUuid());
+        if (checkIndex(i)) {
+            throw new AlreadyExistsException(r.getUuid());
+        } else {
+            saveInternal(r, i);
+        }
+    }
 
     @Override
-    public abstract void delete(String uuid);
+    public void delete(String uuid) {
+        I i = find(uuid);
+        if (checkIndex(i)) {
+            deleteInternal(i);
+        } else {
+            throw new NotFoundException(uuid);
+        }
+    }
 
     @Override
     public abstract void update(Resume r);
@@ -25,4 +46,14 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public abstract int size();
+
+    protected abstract I find(String uuid);
+
+    protected abstract Resume getByIndex(I index);
+
+    protected abstract boolean checkIndex(I index);
+
+    protected abstract void saveInternal(Resume r, I i);
+
+    protected abstract void deleteInternal(I i);
 }

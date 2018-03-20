@@ -19,7 +19,7 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
     @Test
     @Override
     public void delete() throws Exception {
-        super.delete();
+        storage.delete(r1.getUuid());
         assertTrue(sorted());
     }
 

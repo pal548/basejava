@@ -9,17 +9,20 @@ import java.util.Arrays;
  */
 public class SortedArrayStorage extends AbstractArrayStorage {
 
-    protected void saveInternal(Resume r, int i) {
+    @Override
+    protected void saveInternalInternal(Resume r, int i) {
         i = -i - 1; // преобразуем результат Arrays.binarySearch в индекс
         System.arraycopy(storage, i, storage, i + 1, size - i);
         storage[i] = r;
     }
 
-    protected void deleteInternal(int i) {
+    @Override
+    protected void deleteInternalInternal(int i) {
         System.arraycopy(storage, i + 1, storage, i, size - i - 1);
     }
 
-    protected int find(String uuid) {
+    @Override
+    protected Integer find(String uuid) {
         return Arrays.binarySearch(storage, 0, size, new Resume(uuid));
     }
 }
