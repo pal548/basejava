@@ -17,20 +17,17 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public Resume get(String uuid) {
-        for (Resume r : list) {
-            if (r.getUuid().equals(uuid))
-                return r;
-        }
-        throw new NotFoundException(uuid);
+    protected boolean checkIndex(Integer index) {
+        return index > -1;
     }
 
     @Override
-    public void save(Resume r) {
-        for (Resume re : list) {
-            if (re.getUuid().equals(r.getUuid()))
-                throw new AlreadyExistsException(r.getUuid());
-        }
+    protected Resume getByIndex(Integer index) {
+        return list.get(index);
+    }
+
+    @Override
+    protected void saveInternal(Resume r, Integer integer) {
         list.add(r);
     }
 
@@ -77,18 +74,4 @@ public class ListStorage extends AbstractStorage<Integer> {
         return -1;
     }
 
-    @Override
-    protected Resume getByIndex(Integer index) {
-        return list.get(index);
-    }
-
-    @Override
-    protected boolean checkIndex(Integer index) {
-        return index > -1;
-    }
-
-    @Override
-    protected void saveInternal(Resume r, Integer integer) {
-        list.add(r);
-    }
 }
