@@ -39,7 +39,16 @@ public abstract class AbstractStorage<I> implements Storage {
     }
 
     @Override
-    public abstract void update(Resume r);
+    public void update(Resume r) {
+        I i = find(r.getUuid());
+        if (!checkIndex(i)) {
+            throw new NotFoundException(r.getUuid());
+        } else {
+            updateInternal(i, r);
+        }
+    }
+
+
 
     @Override
     public abstract Resume[] getAll();
@@ -56,4 +65,6 @@ public abstract class AbstractStorage<I> implements Storage {
     protected abstract void saveInternal(Resume r, I i);
 
     protected abstract void deleteInternal(I i);
+
+    protected abstract void updateInternal(I i, Resume r);
 }

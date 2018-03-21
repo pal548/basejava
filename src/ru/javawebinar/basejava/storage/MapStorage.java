@@ -1,10 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -37,21 +35,8 @@ public class MapStorage extends AbstractStorage<String> {
     }
 
     @Override
-    public void update(Resume r) {
-        Iterator<Map.Entry<String, Resume>> iterator = map.entrySet().iterator();
-        boolean found = false;
-        while (iterator.hasNext()) {
-            Map.Entry<String, Resume> entry = iterator.next();
-            if (entry.getValue().getUuid().equals(r.getUuid())) {
-                iterator.remove();
-                found = true;
-                break;
-            }
-        }
-        if (found)
-            map.put(r.getUuid(),r);
-        else
-            throw new NotFoundException(r.getUuid());
+    public void updateInternal(String key, Resume r) {
+        map.replace(key, r);
     }
 
     @Override

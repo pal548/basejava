@@ -1,11 +1,8 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.AlreadyExistsException;
-import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class ListStorage extends AbstractStorage<Integer> {
@@ -37,21 +34,9 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public void update(Resume r) {
-        Iterator<Resume> iterator = list.iterator();
-        boolean found = false;
-        while (iterator.hasNext()) {
-            Resume ri = iterator.next();
-            if (ri.getUuid().equals(r.getUuid())) {
-                iterator.remove();
-                found = true;
-                break;
-            }
-        }
-        if (found)
-            list.add(r);
-        else
-            throw new NotFoundException(r.getUuid());
+    public void updateInternal(Integer i, Resume r) {
+        list.remove(i.intValue());
+        list.add(r);
     }
 
     @Override

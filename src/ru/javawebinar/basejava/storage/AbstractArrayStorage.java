@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
@@ -51,13 +50,9 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
         size--;
     }
 
-    public void update(Resume r) {
-        int i = find(r.getUuid());
-        if (i < 0) {
-            throw new NotFoundException(r.getUuid());
-        } else {
-            storage[i] = r;
-        }
+    @Override
+    public void updateInternal(Integer i, Resume r) {
+        storage[i] = r;
     }
 
     /**
