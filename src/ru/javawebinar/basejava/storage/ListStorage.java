@@ -35,8 +35,7 @@ public class ListStorage extends AbstractStorage<Integer> {
 
     @Override
     public void updateInternal(Integer i, Resume r) {
-        list.remove(i.intValue());
-        list.add(r);
+        list.set(i, r);
     }
 
     @Override
