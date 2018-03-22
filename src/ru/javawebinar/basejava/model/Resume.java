@@ -8,13 +8,18 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume>{
     // Unique identifier
     private final String uuid;
+    private final String fullName;
 
     public Resume() {
         this(UUID.randomUUID().toString());
     }
-
     public Resume(String uuid) {
+        this(uuid, "");
+    }
+
+    public Resume(String uuid, String fullName) {
         this.uuid = uuid;
+        this.fullName = fullName;
     }
 
     public String getUuid() {
@@ -28,21 +33,29 @@ public class Resume implements Comparable<Resume>{
 
         Resume resume = (Resume) o;
 
-        return uuid.equals(resume.uuid);
+        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        return uuid.hashCode();
+        // взято из https://stackoverflow.com/questions/10587506/creating-a-hash-from-several-java-string-objects
+        int result = 17;
+        result = 37 * result + uuid.hashCode();
+        result = 37 * result + fullName.hashCode();
+        return result;
     }
 
     @Override
     public String toString() {
-        return uuid;
+        return uuid + ", " + fullName;
     }
 
     @Override
     public int compareTo(Resume o) {
         return uuid.compareTo(o.getUuid());
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 }
