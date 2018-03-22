@@ -4,6 +4,8 @@ import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.List;
+
 public abstract class AbstractStorage<I> implements Storage {
 
     @Override
@@ -51,7 +53,7 @@ public abstract class AbstractStorage<I> implements Storage {
 
 
     @Override
-    public abstract Resume[] getAll();
+    public abstract List<Resume> getAllSorted();
 
     @Override
     public abstract int size();

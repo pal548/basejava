@@ -23,16 +23,4 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
         assertTrue(sorted());
     }
 
-    private boolean sorted() {
-        Resume[] arr = storage.getAll();
-        if (arr.length <= 1) {
-            return true;
-        }
-        for (int i = 1; i < arr.length; i++) {
-            if (arr[i - 1].compareTo(arr[i]) > 0) {
-                return false;
-            }
-        }
-        return true;
-    }
 }

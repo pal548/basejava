@@ -1,12 +1,9 @@
 package ru.javawebinar.basejava;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.ListStorage;
-import ru.javawebinar.basejava.storage.SortedArrayStorage;
 import ru.javawebinar.basejava.storage.Storage;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -92,7 +89,7 @@ public class MainTestArrayStorage {
 
     static void printAll() {
         System.out.println("Get All:");
-        for (Resume r : ARRAY_STORAGE.getAll()) {
+        for (Resume r : ARRAY_STORAGE.getAllSorted()) {
             System.out.println(r);
         }
         System.out.println("");
