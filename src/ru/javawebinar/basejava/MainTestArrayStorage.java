@@ -5,6 +5,8 @@ import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.ListStorage;
 import ru.javawebinar.basejava.storage.Storage;
+
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -75,7 +77,7 @@ public class MainTestArrayStorage {
         System.out.println("Trying to fill entire storage");
         for(int i = 1; i <= 10000; i++) {
             try {
-                ARRAY_STORAGE.save(new Resume(String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000))));
+                ARRAY_STORAGE.save(new Resume(String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000)), UUID.randomUUID().toString()));
                 //ARRAY_STORAGE.save(new Resume());
             } catch (AlreadyExistsException e) {
                 System.out.println(e.getMessage());
