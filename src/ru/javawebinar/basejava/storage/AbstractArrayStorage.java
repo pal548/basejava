@@ -63,7 +63,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
      */
     public List<Resume> getAllSorted() {
         Resume[] arr = Arrays.copyOf(storage, size);
-        Arrays.sort(arr);
+        Arrays.sort(arr, Resume::compareByFullName);
         return new ArrayList<>(Arrays.asList(arr));
     }
 

@@ -18,9 +18,9 @@ public abstract class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
-    protected static final Resume r1 = new Resume(UUID_1);
-    protected static final Resume r2 = new Resume(UUID_2);
-    protected static final Resume r3 = new Resume(UUID_3);
+    protected static final Resume r1 = new Resume(UUID_1, "Иванов");
+    protected static final Resume r2 = new Resume(UUID_2, "Петров");
+    protected static final Resume r3 = new Resume(UUID_3, "Аверьянов");
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -93,7 +93,7 @@ public abstract class AbstractStorageTest {
             return true;
         }
         for (int i = 1; i < list.size(); i++) {
-            if (list.get(i - 1).compareTo(list.get(i)) > 0) {
+            if (list.get(i - 1).compareByFullName(list.get(i)) > 0) {
                 return false;
             }
         }
