@@ -17,8 +17,7 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
     }
 
     @Test
-    @Override
-    public void delete() throws Exception {
+    public void delete_CheckSorted() throws Exception {
         storage.delete(r1.getUuid());
         assertTrue(sorted());
     }

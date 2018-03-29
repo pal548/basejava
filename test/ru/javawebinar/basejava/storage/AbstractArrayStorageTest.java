@@ -21,7 +21,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         } catch (StorageException e) {
             fail();
         }
-        storage.save(new Resume());
+        storage.save(new Resume("John Grisham"));
     }
 
     protected void fillRandom() {

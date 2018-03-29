@@ -42,14 +42,14 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void testGetSave() throws Exception {
-        Resume r = new Resume();
+        Resume r = new Resume("Robinson");
         storage.save(r);
         assertEquals(r, storage.get(r.getUuid()));
     }
 
     @Test(expected = AlreadyExistsException.class)
     public void saveAlreadyExists() {
-        Resume r = new Resume(UUID_1);
+        Resume r = new Resume(UUID_1, "Иванов");
         storage.save(r);
     }
 
@@ -61,13 +61,13 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotFoundException.class)
     public void deleteNotExisted() {
-        Resume r = new Resume();
+        Resume r = new Resume("Jameson");
         storage.delete(r.getUuid());
     }
 
     @Test
     public void update() throws Exception {
-        Resume r = new Resume(UUID_1);
+        Resume r = new Resume(UUID_1, "Grisham");
         storage.update(r);
         assertTrue(storage.get(r.getUuid()) == r);
     }
