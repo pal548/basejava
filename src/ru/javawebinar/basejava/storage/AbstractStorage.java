@@ -53,7 +53,11 @@ public abstract class AbstractStorage<I> implements Storage {
 
 
     @Override
-    public abstract List<Resume> getAllSorted();
+    public List<Resume> getAllSorted() {
+        List<Resume> sortedList = getAllList();
+        sortedList.sort(Resume::compareByFullName);
+        return sortedList;
+    }
 
     @Override
     public abstract int size();
@@ -69,4 +73,6 @@ public abstract class AbstractStorage<I> implements Storage {
     protected abstract void deleteInternal(I i);
 
     protected abstract void updateInternal(I i, Resume r);
+
+    protected abstract List<Resume> getAllList();
 }

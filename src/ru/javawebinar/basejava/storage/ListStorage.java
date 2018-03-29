@@ -39,10 +39,8 @@ public class ListStorage extends AbstractStorage<Integer> {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
-        List<Resume> sortedList = new ArrayList<>(list);
-        sortedList.sort(Resume::compareByFullName);
-        return sortedList;
+    protected List<Resume> getAllList() {
+        return new ArrayList<>(list);
     }
 
     @Override
