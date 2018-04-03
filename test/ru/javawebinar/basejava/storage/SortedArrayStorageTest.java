@@ -22,8 +22,7 @@ public class SortedArrayStorageTest extends AbstractArrayStorageTest {
         assertTrue(sorted());
     }
 
-    @Override
-    protected boolean sorted() {
+    private boolean sorted() {
         Resume[] arr = ((SortedArrayStorage) storage).getAll();
         if (arr.length <= 1) {
             return true;
