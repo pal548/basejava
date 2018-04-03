@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -76,27 +77,11 @@ public abstract class AbstractStorageTest {
     public void getAllSorted() throws Exception {
         List<Resume> list = storage.getAllSorted();
         assertEquals(storage.size(), list.size());
-        assertTrue(list.contains(r1));
-        assertTrue(list.contains(r2));
-        assertTrue(list.contains(r3));
-        assertTrue(sorted());
+        assertEquals(Arrays.asList(r3, r1, r2), list);
     }
 
     @Test
     public void size() throws Exception {
         assertEquals(3, storage.size());
-    }
-
-    protected boolean sorted() {
-        List<Resume> list = storage.getAllSorted();
-        if (list.size() <= 1) {
-            return true;
-        }
-        for (int i = 1; i < list.size(); i++) {
-            if (list.get(i - 1).compareByFullName(list.get(i)) > 0) {
-                return false;
-            }
-        }
-        return true;
     }
 }

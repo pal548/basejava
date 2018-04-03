@@ -49,16 +49,6 @@ public class Resume implements Comparable<Resume>{
         return uuid.compareTo(o.getUuid());
     }
 
-    public int compareByFullName(Resume o) {
-        int result = fullName.compareTo(o.fullName);
-        if (result != 0) {
-            return result;
-        } else {
-            result = uuid.compareTo(o.uuid);
-            return result;
-        }
-    }
-
     public String getFullName() {
         return fullName;
     }

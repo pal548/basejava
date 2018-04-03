@@ -13,8 +13,13 @@ public class MapUuidStorage extends AbstractStorage<String> {
     }
 
     @Override
+    protected String find(String uuid) {
+        return uuid;
+    }
+
+    @Override
     protected boolean checkIndex(String index) {
-        return index != null;
+        return map.containsKey(index);
     }
 
     @Override
@@ -47,14 +52,7 @@ public class MapUuidStorage extends AbstractStorage<String> {
         return map.size();
     }
 
-    @Override
-    protected String find(String uuid) {
-        for (String key : map.keySet()){
-            if(Objects.equals(key, uuid))
-                return key;
-        }
-        return null;
-    }
+
 
 
 }

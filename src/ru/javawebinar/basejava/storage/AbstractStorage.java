@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class AbstractStorage<I> implements Storage {
@@ -50,12 +51,10 @@ public abstract class AbstractStorage<I> implements Storage {
         }
     }
 
-
-
     @Override
     public List<Resume> getAllSorted() {
         List<Resume> sortedList = getAllList();
-        sortedList.sort(Resume::compareByFullName);
+        sortedList.sort(Comparator.comparing(Resume::getFullName).thenComparing(Resume::getUuid));
         return sortedList;
     }
 
