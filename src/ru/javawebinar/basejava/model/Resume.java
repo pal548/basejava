@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -27,19 +28,15 @@ public class Resume implements Comparable<Resume>{
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         Resume resume = (Resume) o;
-
-        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName);
+        return Objects.equals(uuid, resume.uuid) &&
+                Objects.equals(fullName, resume.fullName);
     }
 
     @Override
     public int hashCode() {
-        // взято из https://stackoverflow.com/questions/10587506/creating-a-hash-from-several-java-string-objects
-        int result = 17;
-        result = 37 * result + uuid.hashCode();
-        result = 37 * result + fullName.hashCode();
-        return result;
+
+        return Objects.hash(uuid, fullName);
     }
 
     @Override
