@@ -25,8 +25,4 @@ public class SortedArrayStorage extends AbstractArrayStorage {
     protected Integer find(String uuid) {
         return Arrays.binarySearch(storage, 0, size, new Resume(uuid, ""));
     }
-
-    Resume[] getAll() {
-        return Arrays.copyOf(storage, size);
-    }
 }
