@@ -21,13 +21,13 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
         } catch (StorageException e) {
             fail();
         }
-        storage.save(new Resume("John Grisham"));
+        storage.save(new Resume("John Grisham", sections));
     }
 
     protected void fillRandom() {
         storage.clear();
         for(int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-            storage.save(new Resume(UUID.randomUUID().toString(), String.valueOf(ThreadLocalRandom.current().nextInt(9999))));
+            storage.save(new Resume(UUID.randomUUID().toString(), String.valueOf(ThreadLocalRandom.current().nextInt(9999)), sections));
         }
     }
 }

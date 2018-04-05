@@ -2,10 +2,11 @@ package ru.javawebinar.basejava;
 
 import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.ListStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -16,21 +17,23 @@ public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new ListStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume("uuid1");
-        Resume r2 = new Resume("uuid2");
-        Resume r3 = new Resume("uuid3");
+        Resume r1 = new Resume("Name1", Arrays.asList(new SectionRecord(SectionType.PERSONAL, new SectionSingle("--личные качества--")),
+                                                      new SectionRecord(SectionType.OBJECTIVE, new SectionSingle("--позиция--")),
+                                                      new SectionRecord(SectionType.ACHIEVEMENT, new SectionMultiple(Arrays.asList("")))  ));
+        Resume r2 = new Resume("Name2", sections);
+        Resume r3 = new Resume("Name3", sections);
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.delete(r1.getUuid());
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.save(r2);
         ARRAY_STORAGE.save(r3);
-        ARRAY_STORAGE.save(new Resume("4"));
-        ARRAY_STORAGE.save(new Resume("9"));
-        ARRAY_STORAGE.save(new Resume("7"));
-        ARRAY_STORAGE.save(new Resume("8"));
-        ARRAY_STORAGE.save(new Resume("3"));
-        ARRAY_STORAGE.save(new Resume("uuid4"));
+        ARRAY_STORAGE.save(new Resume("4", sections));
+        ARRAY_STORAGE.save(new Resume("9", sections));
+        ARRAY_STORAGE.save(new Resume("7", sections));
+        ARRAY_STORAGE.save(new Resume("8", sections));
+        ARRAY_STORAGE.save(new Resume("3", sections));
+        ARRAY_STORAGE.save(new Resume("uuid4", sections));
 
 
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
@@ -60,13 +63,13 @@ public class MainTestArrayStorage {
 
         System.out.println("Trying to update resume with uuid \"uuid4\"");
         try {
-            ARRAY_STORAGE.update(new Resume("uuid4"));
+            ARRAY_STORAGE.update(new Resume("uuid4", sections));
         } catch (NotFoundException e) {
             System.out.println(e.getMessage());
         }
         printAll();
 
-        ARRAY_STORAGE.update(new Resume("uuid2"));
+        ARRAY_STORAGE.update(new Resume("uuid2", sections));
         System.out.println("Updated uuid2");
         printAll();
 
@@ -77,7 +80,7 @@ public class MainTestArrayStorage {
         System.out.println("Trying to fill entire storage");
         for(int i = 1; i <= 10000; i++) {
             try {
-                ARRAY_STORAGE.save(new Resume(String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000)), UUID.randomUUID().toString()));
+                ARRAY_STORAGE.save(new Resume(String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000)), UUID.randomUUID().toString(), sections));
                 //ARRAY_STORAGE.save(new Resume());
             } catch (AlreadyExistsException e) {
                 System.out.println(e.getMessage());

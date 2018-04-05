@@ -1,5 +1,6 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -11,13 +12,16 @@ public class Resume implements Comparable<Resume>{
     private final String uuid;
     private final String fullName;
 
-    public Resume(String fullName) {
-        this(UUID.randomUUID().toString(), fullName);
+    private final List<SectionRecord> sections;
+
+    public Resume(String fullName, List<SectionRecord> sections) {
+        this(UUID.randomUUID().toString(), fullName, sections);
     }
 
-    public Resume(String uuid, String fullName) {
+    public Resume(String uuid, String fullName, List<SectionRecord> sections) {
         this.uuid = uuid;
         this.fullName = fullName;
+        this.sections = sections;
     }
 
     public String getUuid() {

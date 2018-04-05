@@ -19,9 +19,9 @@ public abstract class AbstractStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
-    protected static final Resume r1 = new Resume(UUID_1, "Иванов");
-    protected static final Resume r2 = new Resume(UUID_2, "Петров");
-    protected static final Resume r3 = new Resume(UUID_3, "Аверьянов");
+    protected static final Resume r1 = new Resume(UUID_1, "Иванов", sections);
+    protected static final Resume r2 = new Resume(UUID_2, "Петров", sections);
+    protected static final Resume r3 = new Resume(UUID_3, "Аверьянов", sections);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -43,14 +43,14 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void testGetSave() throws Exception {
-        Resume r = new Resume("Robinson");
+        Resume r = new Resume("Robinson", sections);
         storage.save(r);
         assertEquals(r, storage.get(r.getUuid()));
     }
 
     @Test(expected = AlreadyExistsException.class)
     public void saveAlreadyExists() {
-        Resume r = new Resume(UUID_1, "Иванов");
+        Resume r = new Resume(UUID_1, "Иванов", sections);
         storage.save(r);
     }
 
@@ -62,13 +62,13 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotFoundException.class)
     public void deleteNotExisted() {
-        Resume r = new Resume("Jameson");
+        Resume r = new Resume("Jameson", sections);
         storage.delete(r.getUuid());
     }
 
     @Test
     public void update() throws Exception {
-        Resume r = new Resume(UUID_1, "Grisham");
+        Resume r = new Resume(UUID_1, "Grisham", sections);
         storage.update(r);
         assertTrue(storage.get(r.getUuid()) == r);
     }
