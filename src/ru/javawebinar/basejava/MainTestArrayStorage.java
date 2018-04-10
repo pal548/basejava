@@ -26,7 +26,11 @@ public class MainTestArrayStorage {
                                                       new SectionRecord(SectionType.QUALIFICATIONS, new SectionMultiple(Arrays.asList("--квалификация 1--",
                                                                                                                                       "--квалификация 2--",
                                                                                                                                       "--квалификация 3--"))),
-                                                      new SectionRecord(SectionType.EXPERIENCE, )  )  ));
+                                                      new SectionRecord(SectionType.EXPERIENCE, new SectionExperience(Arrays.asList(new ExperienceRecord("Компания 4", "10/2016 - сейчас", "Старший программист","--текст описания--"),
+                                                                                                                                    new ExperienceRecord("Компания 3", "01/2014 - 10/2016", "Архитектор" ,"--текст описания--") )) ),
+                                                      new SectionRecord(SectionType.EDUCATION, new SectionSingle("--текст образования--"))
+                                                     )
+                              );
         //Resume r2 = new Resume("Name2", sections);
         //Resume r3 = new Resume("Name3", sections);
 
