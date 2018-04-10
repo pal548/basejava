@@ -7,6 +7,7 @@ import ru.javawebinar.basejava.storage.ListStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
 import java.util.Arrays;
+import java.util.ServiceConfigurationError;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -17,23 +18,29 @@ public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new ListStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume("Name1", Arrays.asList(new SectionRecord(SectionType.PERSONAL, new SectionSingle("--личные качества--")),
-                                                      new SectionRecord(SectionType.OBJECTIVE, new SectionSingle("--позиция--")),
-                                                      new SectionRecord(SectionType.ACHIEVEMENT, new SectionMultiple(Arrays.asList("")))  ));
-        Resume r2 = new Resume("Name2", sections);
-        Resume r3 = new Resume("Name3", sections);
+        Resume r1 = new Resume("Name1", Arrays.asList(new SectionRecord(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--")),
+                                                      new SectionRecord(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--")),
+                                                      new SectionRecord(SectionType.ACHIEVEMENT, new SectionMultiple(Arrays.asList("--достижение 1--",
+                                                                                                                                   "--достижение 2--",
+                                                                                                                                   "--достижение 3--"))),
+                                                      new SectionRecord(SectionType.QUALIFICATIONS, new SectionMultiple(Arrays.asList("--квалификация 1--",
+                                                                                                                                      "--квалификация 2--",
+                                                                                                                                      "--квалификация 3--"))),
+                                                      new SectionRecord(SectionType.EXPERIENCE, )  )  ));
+        //Resume r2 = new Resume("Name2", sections);
+        //Resume r3 = new Resume("Name3", sections);
 
         ARRAY_STORAGE.save(r1);
         ARRAY_STORAGE.delete(r1.getUuid());
         ARRAY_STORAGE.save(r1);
-        ARRAY_STORAGE.save(r2);
+        /*ARRAY_STORAGE.save(r2);
         ARRAY_STORAGE.save(r3);
         ARRAY_STORAGE.save(new Resume("4", sections));
         ARRAY_STORAGE.save(new Resume("9", sections));
         ARRAY_STORAGE.save(new Resume("7", sections));
         ARRAY_STORAGE.save(new Resume("8", sections));
         ARRAY_STORAGE.save(new Resume("3", sections));
-        ARRAY_STORAGE.save(new Resume("uuid4", sections));
+        ARRAY_STORAGE.save(new Resume("uuid4", sections));*/
 
 
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.getUuid()));
@@ -61,7 +68,7 @@ public class MainTestArrayStorage {
         }
         printAll();
 
-        System.out.println("Trying to update resume with uuid \"uuid4\"");
+        /*System.out.println("Trying to update resume with uuid \"uuid4\"");
         try {
             ARRAY_STORAGE.update(new Resume("uuid4", sections));
         } catch (NotFoundException e) {
@@ -90,6 +97,7 @@ public class MainTestArrayStorage {
         printAll();
 
         System.out.println("Size: " + ARRAY_STORAGE.size());
+        */
     }
 
     static void printAll() {
