@@ -1,23 +1,53 @@
 package ru.javawebinar.basejava.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ExperienceRecord {
-    private final String company;
+    private String company;
 
-    private final String dates;
+    private Date dateBeg;
 
-    private final String position;
+    private Date dateEnd;
 
-    private final String description;
+    private String position;
 
-    public ExperienceRecord(String company, String dates, String position, String description) {
+    private String description;
+
+    public ExperienceRecord() {
+    }
+
+    public ExperienceRecord(String company, Date dateBeg, Date dateEnd, String position, String description) {
         this.company = company;
-        this.dates = dates;
+        this.dateBeg = dateBeg;
+        this.dateEnd = dateEnd;
         this.position = position;
+        this.description = description;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public void setDateBeg(Date dateBeg) {
+        this.dateBeg = dateBeg;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setDescription(String description) {
         this.description = description;
     }
 
     @Override
     public String toString() {
-        return company + ", " + dates + ", " + position + ", " + description;
+        SimpleDateFormat df = new SimpleDateFormat("MM/yyyy");
+        return company + ", " + df.format(dateBeg) + " - " + (dateEnd != null ? df.format(dateEnd) : " сейчас") + ", " + position + ", " + description;
     }
 }

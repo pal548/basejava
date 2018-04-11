@@ -10,7 +10,7 @@ public class Resume implements Comparable<Resume>{
     private final String uuid;
     private final String fullName;
 
-    private Map<SectionType, AbstractSectionData> sections;
+    private Map<SectionType, AbstractSectionData> sections = new HashMap<>();
     private static final List<SectionType> sectionOrder = Arrays.asList(
             SectionType.PERSONAL,
             SectionType.OBJECTIVE,

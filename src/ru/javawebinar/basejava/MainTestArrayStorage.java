@@ -1,15 +1,13 @@
 package ru.javawebinar.basejava;
 
-import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.ListStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
 import java.util.Arrays;
-import java.util.ServiceConfigurationError;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Test for ru.javawebinar.basejava.storage.ArrayStorage
@@ -18,19 +16,44 @@ public class MainTestArrayStorage {
     static final Storage ARRAY_STORAGE = new ListStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume("Name1", Arrays.asList(new SectionRecord(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--")),
-                                                      new SectionRecord(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--")),
-                                                      new SectionRecord(SectionType.ACHIEVEMENT, new SectionMultiple(Arrays.asList("--достижение 1--",
-                                                                                                                                   "--достижение 2--",
-                                                                                                                                   "--достижение 3--"))),
-                                                      new SectionRecord(SectionType.QUALIFICATIONS, new SectionMultiple(Arrays.asList("--квалификация 1--",
-                                                                                                                                      "--квалификация 2--",
-                                                                                                                                      "--квалификация 3--"))),
-                                                      new SectionRecord(SectionType.EXPERIENCE, new SectionExperience(Arrays.asList(new ExperienceRecord("Компания 4", "10/2016 - сейчас", "Старший программист","--текст описания--"),
-                                                                                                                                    new ExperienceRecord("Компания 3", "01/2014 - 10/2016", "Архитектор" ,"--текст описания--") )) ),
-                                                      new SectionRecord(SectionType.EDUCATION, new SectionSingle("--текст образования--"))
-                                                     )
-                              );
+        Resume r1 = new Resume("Name1");
+        r1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
+        r1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
+
+        SectionMultiple sm = new SectionMultiple();
+        sm.addText("--достижение 1--");
+        sm.addText("--достижение 2--");
+        sm.addText("--достижение 3--");
+        r1.addSection(SectionType.ACHIEVEMENT, sm);
+
+        sm = new SectionMultiple();
+        sm.addText("--квалификация 1--");
+        sm.addText("--квалификация 2--");
+        sm.addText("--квалификация 3--");
+        r1.addSection(SectionType.QUALIFICATIONS, sm);
+
+        ExperienceRecord er = new ExperienceRecord();
+        er.setCompany("Компания 4");
+        er.setDateBeg(new GregorianCalendar(2016, Calendar.OCTOBER, 1).getTime());
+        er.setPosition("Старший программист");
+        er.setDescription("--текст описания--");
+
+        SectionExperience sectionExperience = new SectionExperience();
+        sectionExperience.addRecord(er);
+
+        er = new ExperienceRecord();
+        er.setCompany("Компания 3");
+        er.setDateBeg(new GregorianCalendar(2014, Calendar.JANUARY, 1).getTime());
+        er.setDateEnd(new GregorianCalendar(2016, Calendar.OCTOBER, 1).getTime());
+        er.setPosition("Архитектор");
+        er.setDescription("--текст описания--");
+        sectionExperience.addRecord(er);
+
+        r1.addSection(SectionType.EXPERIENCE, sectionExperience);
+
+        r1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
+
+
         //Resume r2 = new Resume("Name2", sections);
         //Resume r3 = new Resume("Name3", sections);
 

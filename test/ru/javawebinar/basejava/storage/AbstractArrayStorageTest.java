@@ -27,7 +27,7 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     protected void fillRandom() {
         storage.clear();
         for(int i = 0; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-            storage.save(new Resume(UUID.randomUUID().toString(), String.valueOf(ThreadLocalRandom.current().nextInt(9999)), null));
+            storage.save(new Resume(UUID.randomUUID().toString(), String.valueOf(ThreadLocalRandom.current().nextInt(9999))));
         }
     }
 }
