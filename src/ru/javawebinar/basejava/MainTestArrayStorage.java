@@ -17,6 +17,14 @@ public class MainTestArrayStorage {
 
     public static void main(String[] args) {
         Resume r1 = new Resume("Name1");
+
+        r1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
+        r1.addContact(ContactType.PHONE, "+7(903)134-82-43");
+        r1.addContact(ContactType.SKYPE, "fasdfasf");
+        r1.addContact(ContactType.VK, "asdfadsf");
+        r1.addContact(ContactType.FB, "asdfadsf");
+
+
         r1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
         r1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
 

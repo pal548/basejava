@@ -5,7 +5,7 @@ import java.util.*;
 /**
  * ru.javawebinar.basejava.model.Resume class
  */
-public class Resume implements Comparable<Resume>{
+public class Resume implements Comparable<Resume> {
     // Unique identifier
     private final String uuid;
     private final String fullName;
@@ -19,6 +19,8 @@ public class Resume implements Comparable<Resume>{
             SectionType.EXPERIENCE,
             SectionType.EDUCATION);
 
+    private Map<ContactType, String> contacts = new HashMap<>();
+
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
     }
@@ -30,6 +32,10 @@ public class Resume implements Comparable<Resume>{
 
     public void addSection(SectionType type, AbstractSectionData data) {
         sections.put(type, data);
+    }
+
+    public void addContact(ContactType type, String s) {
+        contacts.put(type, s);
     }
 
     public String getUuid() {
