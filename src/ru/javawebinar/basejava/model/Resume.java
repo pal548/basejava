@@ -1,8 +1,6 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * ru.javawebinar.basejava.model.Resume class
@@ -12,16 +10,26 @@ public class Resume implements Comparable<Resume>{
     private final String uuid;
     private final String fullName;
 
-    private final List<SectionRecord> sections;
+    private Map<SectionType, AbstractSectionData> sections;
+    private static final List<SectionType> sectionOrder = Arrays.asList(
+            SectionType.PERSONAL,
+            SectionType.OBJECTIVE,
+            SectionType.ACHIEVEMENT,
+            SectionType.QUALIFICATIONS,
+            SectionType.EXPERIENCE,
+            SectionType.EDUCATION);
 
-    public Resume(String fullName, List<SectionRecord> sections) {
-        this(UUID.randomUUID().toString(), fullName, sections);
+    public Resume(String fullName) {
+        this(UUID.randomUUID().toString(), fullName);
     }
 
-    public Resume(String uuid, String fullName, List<SectionRecord> sections) {
+    public Resume(String uuid, String fullName) {
         this.uuid = uuid;
         this.fullName = fullName;
-        this.sections = sections;
+    }
+
+    public void addSection(SectionType type, AbstractSectionData data) {
+        sections.put(type, data);
     }
 
     public String getUuid() {
