@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.ListStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -42,7 +43,7 @@ public class MainTestArrayStorage {
 
         ExperienceRecord er = new ExperienceRecord();
         er.setCompany("Компания 4");
-        er.setDateBeg(new GregorianCalendar(2016, Calendar.OCTOBER, 1).getTime());
+        er.setDateBeg(LocalDate.of(2016, 10, 1));
         er.setPosition("Старший программист");
         er.setDescription("--текст описания--");
 
@@ -51,8 +52,8 @@ public class MainTestArrayStorage {
 
         er = new ExperienceRecord();
         er.setCompany("Компания 3");
-        er.setDateBeg(new GregorianCalendar(2014, Calendar.JANUARY, 1).getTime());
-        er.setDateEnd(new GregorianCalendar(2016, Calendar.OCTOBER, 1).getTime());
+        er.setDateBeg(LocalDate.of(2014, 1, 1));
+        er.setDateEnd(LocalDate.of(2016, 10, 1));
         er.setPosition("Архитектор");
         er.setDescription("--текст описания--");
         sectionExperience.addRecord(er);
