@@ -1,5 +1,7 @@
 package ru.javawebinar.basejava.model;
 
+import java.util.Objects;
+
 public class SectionSingle extends AbstractSectionData {
     private String value;
 
@@ -14,5 +16,18 @@ public class SectionSingle extends AbstractSectionData {
     @Override
     public String toString() {
         return value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SectionSingle that = (SectionSingle) o;
+        return Objects.equals(value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(value);
     }
 }

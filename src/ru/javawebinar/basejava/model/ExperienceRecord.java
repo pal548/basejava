@@ -3,6 +3,7 @@ package ru.javawebinar.basejava.model;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 public class ExperienceRecord {
     private String company;
@@ -50,5 +51,22 @@ public class ExperienceRecord {
     public String toString() {
         DateTimeFormatter df = DateTimeFormatter.ofPattern("MM/yyyy");
         return company + ", " + df.format(dateBeg) + " - " + (dateEnd != null ? df.format(dateEnd) : " сейчас") + ", " + position + ", " + description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExperienceRecord that = (ExperienceRecord) o;
+        return Objects.equals(company, that.company) &&
+                Objects.equals(dateBeg, that.dateBeg) &&
+                Objects.equals(dateEnd, that.dateEnd) &&
+                Objects.equals(position, that.position) &&
+                Objects.equals(description, that.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(company, dateBeg, dateEnd, position, description);
     }
 }
