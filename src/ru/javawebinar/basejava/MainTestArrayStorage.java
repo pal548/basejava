@@ -43,19 +43,14 @@ public class MainTestArrayStorage {
 
         ExperienceRecord er = new ExperienceRecord();
         er.setCompany("Компания 4");
-        er.setDateBeg(LocalDate.of(2016, 10, 1));
-        er.setPosition("Старший программист");
-        er.setDescription("--текст описания--");
+        er.addExperience(LocalDate.of(2016, 10, 1), null, "Старший программист", "--текст описания--");
 
         SectionExperience sectionExperience = new SectionExperience();
         sectionExperience.addRecord(er);
 
         er = new ExperienceRecord();
         er.setCompany("Компания 3");
-        er.setDateBeg(LocalDate.of(2014, 1, 1));
-        er.setDateEnd(LocalDate.of(2016, 10, 1));
-        er.setPosition("Архитектор");
-        er.setDescription("--текст описания--");
+        er.addExperience(LocalDate.of(2014, 1, 1), LocalDate.of(2016, 10, 1), "Архитектор", "--текст описания--");
         sectionExperience.addRecord(er);
 
         r1.addSection(SectionType.EXPERIENCE, sectionExperience);

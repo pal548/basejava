@@ -1,72 +1,45 @@
 package ru.javawebinar.basejava.model;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExperienceRecord {
     private String company;
 
-    private LocalDate dateBeg;
-
-    private LocalDate dateEnd;
-
-    private String position;
-
-    private String description;
+    private List<ExperienceSubRecord> listExperience = new ArrayList<>();
 
     public ExperienceRecord() {
-    }
-
-    public ExperienceRecord(String company, LocalDate dateBeg, LocalDate dateEnd, String position, String description) {
-        this.company = company;
-        this.dateBeg = dateBeg;
-        this.dateEnd = dateEnd;
-        this.position = position;
-        this.description = description;
     }
 
     public void setCompany(String company) {
         this.company = company;
     }
 
-    public void setDateBeg(LocalDate dateBeg) {
-        this.dateBeg = dateBeg;
-    }
-
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    public void setPosition(String position) {
-        this.position = position;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void addExperience(LocalDate startDate, LocalDate endDate, String position, String descriprion) {
+        listExperience.add(new ExperienceSubRecord(startDate, endDate, position, descriprion));
     }
 
     @Override
     public String toString() {
-        DateTimeFormatter df = DateTimeFormatter.ofPattern("MM/yyyy");
-        return company + ", " + df.format(dateBeg) + " - " + (dateEnd != null ? df.format(dateEnd) : " сейчас") + ", " + position + ", " + description;
+        return company + ", " + listExperience.toString();
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ExperienceRecord that = (ExperienceRecord) o;
-        return Objects.equals(company, that.company) &&
-                Objects.equals(dateBeg, that.dateBeg) &&
-                Objects.equals(dateEnd, that.dateEnd) &&
-                Objects.equals(position, that.position) &&
-                Objects.equals(description, that.description);
+
+        if (!company.equals(that.company)) return false;
+        return listExperience.equals(that.listExperience);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(company, dateBeg, dateEnd, position, description);
+        int result = company.hashCode();
+        result = 31 * result + listExperience.hashCode();
+        return result;
     }
 }
