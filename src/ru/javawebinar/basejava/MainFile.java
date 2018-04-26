@@ -6,6 +6,18 @@ import java.io.IOException;
 
 public class MainFile {
 
+    private static void printFileList(File dir, String indent) {
+        File[] fileList = dir.listFiles();
+        if (fileList != null) {
+            for (File f : fileList) {
+                System.out.println(indent + f.getName());
+                if (f.isDirectory()) {
+                    printFileList(f, indent + "  ");
+                }
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         File file = new File(".gitinore");
@@ -15,13 +27,14 @@ public class MainFile {
             throw new RuntimeException(e);
         }
 
-        File dir = new File("src\\ru\\javawebinar\\basejava");
-        String[] list = dir.list();
+        File dir = new File(".\\");
+        printFileList(dir,"");
+        /*String[] list = dir.list();
         if (list != null) {
             for(String s : list) {
                 System.out.println(s);
             }
-        }
+        }*/
 
         try (final FileInputStream fis = new FileInputStream(".gitignore")) {
             System.out.println(fis.read());
