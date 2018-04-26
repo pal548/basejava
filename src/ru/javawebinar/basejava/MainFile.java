@@ -29,12 +29,6 @@ public class MainFile {
 
         File dir = new File(".\\");
         printFileList(dir,"");
-        /*String[] list = dir.list();
-        if (list != null) {
-            for(String s : list) {
-                System.out.println(s);
-            }
-        }*/
 
         try (final FileInputStream fis = new FileInputStream(".gitignore")) {
             System.out.println(fis.read());
