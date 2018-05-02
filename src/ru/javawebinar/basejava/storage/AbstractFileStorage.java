@@ -71,7 +71,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected void saveInternal(Resume r, File file) {
         try {
             file.createNewFile();
-            doWrite(r, file);
+            updateInternal(file, r);
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
