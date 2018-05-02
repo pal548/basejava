@@ -42,14 +42,14 @@ public class MainTestArrayStorage {
         r1.addSection(SectionType.QUALIFICATIONS, sm);
 
         ExperienceRecord er = new ExperienceRecord();
-        er.setCompany("Компания 4");
+        er.setCompany(new Link("Компания 4", "http://company4.ru"));
         er.addExperience(LocalDate.of(2016, 10, 1), null, "Старший программист", "--текст описания--");
 
         SectionExperience sectionExperience = new SectionExperience();
         sectionExperience.addRecord(er);
 
         er = new ExperienceRecord();
-        er.setCompany("Компания 3");
+        er.setCompany(new Link("Компания 3", "http://company3.ru"));
         er.addExperience(LocalDate.of(2014, 1, 1), LocalDate.of(2016, 10, 1), "Архитектор", "--текст описания--");
         sectionExperience.addRecord(er);
 

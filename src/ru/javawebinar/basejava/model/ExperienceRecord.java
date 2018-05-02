@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ExperienceRecord {
-    private String company;
+    private Link company;
 
     private List<ExperienceSubRecord> listExperience = new ArrayList<>();
 
     public ExperienceRecord() {
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Link company) {
         this.company = company;
     }
 
