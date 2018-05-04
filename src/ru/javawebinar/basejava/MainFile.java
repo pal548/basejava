@@ -6,13 +6,15 @@ import java.io.IOException;
 
 public class MainFile {
 
-    private static void printFileList(File dir, String indent) {
+    private static void printFileList(File dir) {
         File[] fileList = dir.listFiles();
         if (fileList != null) {
             for (File f : fileList) {
-                System.out.println(indent + f.getName());
+                if (!f.isDirectory()) {
+                    System.out.println(f.getName());
+                }
                 if (f.isDirectory()) {
-                    printFileList(f, indent + "  ");
+                    printFileList(f);
                 }
             }
         }
@@ -28,7 +30,7 @@ public class MainFile {
         }
 
         File dir = new File(".\\");
-        printFileList(dir,"");
+        printFileList(dir);
 
         try (final FileInputStream fis = new FileInputStream(".gitignore")) {
             System.out.println(fis.read());
