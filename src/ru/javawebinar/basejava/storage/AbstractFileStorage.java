@@ -101,7 +101,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected List<Resume> getAllList() {
         File[] files = directory.listFiles();
         if (files == null) {
-            return Collections.emptyList();
+            throw new StorageException("IO error", "");
         } else {
             List<Resume> result = new ArrayList<>();
             for (File f : files) {
