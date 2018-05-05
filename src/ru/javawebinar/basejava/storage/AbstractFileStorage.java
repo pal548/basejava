@@ -40,7 +40,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     public int size() {
         String[] strings = directory.list();
         if (strings == null) {
-            return 0;
+            throw new StorageException("IO error", "");
         } else {
             return strings.length;
         }
