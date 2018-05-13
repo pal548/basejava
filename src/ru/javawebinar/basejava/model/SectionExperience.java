@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class SectionExperience extends AbstractSectionData {
+    private static final long serialVersionUID = 1L;
+
     private List<ExperienceRecord> experienceList = new ArrayList<>();
 
     public SectionExperience() {

@@ -1,9 +1,11 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class ExperienceSubRecord {
+public class ExperienceSubRecord implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     private LocalDate dateBeg;
 

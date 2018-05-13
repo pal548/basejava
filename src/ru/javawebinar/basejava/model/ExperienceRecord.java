@@ -1,10 +1,13 @@
 package ru.javawebinar.basejava.model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExperienceRecord {
+public class ExperienceRecord implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Link company;
 
     private List<ExperienceSubRecord> listExperience = new ArrayList<>();

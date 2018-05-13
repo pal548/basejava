@@ -6,6 +6,7 @@ import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.*;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -14,59 +15,40 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
+    protected static final File STORAGE_DIR = new File("D:\\javaops\\basejava\\storage");
+
     protected Storage storage;
 
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
 
-    protected static final Resume r1 = new Resume(UUID_1, "Иванов");
-    protected static final Resume r2 = new Resume(UUID_2, "Петров");
-    protected static final Resume r3 = new Resume(UUID_3, "Аверьянов");
+    protected static final Resume R1 = new Resume(UUID_1, "Иванов");
+    protected static final Resume R2 = new Resume(UUID_2, "Петров");
+    protected static final Resume R3 = new Resume(UUID_3, "Аверьянов");
 
-    public AbstractStorageTest(Storage storage) {
-        this.storage = storage;
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        storage.clear();
-        storage.save(r1);
-        storage.save(r2);
-        storage.save(r3);
-    }
-
-    @Test
-    public void clear() throws Exception {
-        storage.clear();
-        assertEquals(0, storage.size());
-    }
-
-    @Test
-    public void fillResume() {
-        Resume r1 = new Resume("Name1");
-
-        r1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
-        r1.addContact(ContactType.PHONE, "+7(903)134-82-43");
-        r1.addContact(ContactType.SKYPE, "fasdfasf");
-        r1.addContact(ContactType.VK, "asdfadsf");
-        r1.addContact(ContactType.FB, "asdfadsf");
+    static {
+        R1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
+        R1.addContact(ContactType.PHONE, "+7(903)134-82-43");
+        R1.addContact(ContactType.SKYPE, "fasdfasf");
+        R1.addContact(ContactType.VK, "asdfadsf");
+        R1.addContact(ContactType.FB, "asdfadsf");
 
 
-        r1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
-        r1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
+        R1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
+        R1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
 
         SectionMultiple sm = new SectionMultiple();
         sm.addText("--достижение 1--");
         sm.addText("--достижение 2--");
         sm.addText("--достижение 3--");
-        r1.addSection(SectionType.ACHIEVEMENT, sm);
+        R1.addSection(SectionType.ACHIEVEMENT, sm);
 
         sm = new SectionMultiple();
         sm.addText("--квалификация 1--");
         sm.addText("--квалификация 2--");
         sm.addText("--квалификация 3--");
-        r1.addSection(SectionType.QUALIFICATIONS, sm);
+        R1.addSection(SectionType.QUALIFICATIONS, sm);
 
         ExperienceRecord er = new ExperienceRecord();
         er.setCompany(new Link("Компания 4", "http://company4.ru"));
@@ -80,10 +62,29 @@ public abstract class AbstractStorageTest {
         er.addExperience(LocalDate.of(2014, 1, 1), LocalDate.of(2016, 10, 1), "Архитектор", "--текст описания--");
         sectionExperience.addRecord(er);
 
-        r1.addSection(SectionType.EXPERIENCE, sectionExperience);
+        R1.addSection(SectionType.EXPERIENCE, sectionExperience);
 
-        r1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
+        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
     }
+
+    public AbstractStorageTest(Storage storage) {
+        this.storage = storage;
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        storage.clear();
+        storage.save(R1);
+        storage.save(R2);
+        storage.save(R3);
+    }
+
+    @Test
+    public void clear() throws Exception {
+        storage.clear();
+        assertEquals(0, storage.size());
+    }
+
     @Test
     public void testGetSave() throws Exception {
         Resume r = new Resume("Robinson", null);
@@ -99,8 +100,8 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotFoundException.class)
     public void delete() throws Exception {
-        storage.delete(r1.getUuid());
-        storage.get(r1.getUuid());
+        storage.delete(R1.getUuid());
+        storage.get(R1.getUuid());
     }
 
     @Test(expected = NotFoundException.class)
@@ -113,14 +114,14 @@ public abstract class AbstractStorageTest {
     public void update() throws Exception {
         Resume r = new Resume(UUID_1, "Grisham");
         storage.update(r);
-        assertTrue(storage.get(r.getUuid()) == r);
+        assertTrue(storage.get(r.getUuid()).equals(r));
     }
 
     @Test
     public void getAllSorted() throws Exception {
         List<Resume> list = storage.getAllSorted();
         assertEquals(storage.size(), list.size());
-        assertEquals(Arrays.asList(r3, r1, r2), list);
+        assertEquals(Arrays.asList(R3, R1, R2), list);
     }
 
     @Test

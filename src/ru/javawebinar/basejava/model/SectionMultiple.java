@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class SectionMultiple extends AbstractSectionData {
+    private static final long serialVersionUID = 1L;
+
     private List<String> strings= new ArrayList<>();
 
     public SectionMultiple() {

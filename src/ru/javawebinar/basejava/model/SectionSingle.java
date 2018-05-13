@@ -3,6 +3,8 @@ package ru.javawebinar.basejava.model;
 import java.util.Objects;
 
 public class SectionSingle extends AbstractSectionData {
+    private static final long serialVersionUID = 1L;
+
     private String value;
 
     public SectionSingle(String value) {
