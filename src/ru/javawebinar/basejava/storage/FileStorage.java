@@ -8,15 +8,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private File directory;
 
-    protected abstract Resume doRead(InputStream is) throws IOException;
+    private ResumeSerializer resumeSerializer;
 
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
-
-    protected AbstractFileStorage(File directory) {
-        Objects.requireNonNull(directory, "directory must not be null");
+    protected FileStorage(String dir, ResumeSerializer resumeSerializer) {
+        Objects.requireNonNull(dir, "directory must not be null");
+        directory = new File(dir);
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not a directory");
         }
@@ -24,6 +23,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
         this.directory = directory;
+        Objects.requireNonNull(resumeSerializer, "resume serializer must not be null");
+        this.resumeSerializer = resumeSerializer;
     }
 
     @Override
@@ -56,7 +57,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume getByIndex(File file) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(file)));
+            return resumeSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
@@ -89,7 +90,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void updateInternal(File file, Resume r) {
         try {
-            doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
+            resumeSerializer.doWrite(r, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("IO error", file.getName(), e);
         }
