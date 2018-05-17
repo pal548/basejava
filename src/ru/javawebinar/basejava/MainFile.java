@@ -10,8 +10,8 @@ public class MainFile {
         File[] fileList = dir.listFiles();
         if (fileList != null) {
             for (File f : fileList) {
-                System.out.println(indent + f.getName());
                 if (f.isDirectory()) {
+                    System.out.println(indent + f.getName());
                     printFileList(f, "  " + indent);
                 }
             }
