@@ -13,7 +13,7 @@ public class FileStorage extends AbstractStorage<File> {
 
     private ResumeSerializer resumeSerializer;
 
-    protected FileStorage(String dir, ResumeSerializer resumeSerializer) {
+    public FileStorage(String dir, ResumeSerializer resumeSerializer) {
         Objects.requireNonNull(dir, "directory must not be null");
         directory = new File(dir);
         if (!directory.isDirectory()) {
@@ -22,7 +22,6 @@ public class FileStorage extends AbstractStorage<File> {
         if (!directory.canRead() || !directory.canWrite()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not readable/writable");
         }
-        this.directory = directory;
         Objects.requireNonNull(resumeSerializer, "resume serializer must not be null");
         this.resumeSerializer = resumeSerializer;
     }

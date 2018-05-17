@@ -9,23 +9,23 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
 
     private ResumeSerializer resumeSerializer;
 
-    protected PathStorage(String dir, ResumeSerializer resumeSerializer) {
+    public PathStorage(String dir, ResumeSerializer resumeSerializer) {
         Objects.requireNonNull(dir, "directory must not be null");
         directory = Paths.get(dir);
-        Objects.requireNonNull(resumeSerializer, "resume serializer must not be null");
-        this.resumeSerializer = resumeSerializer;
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
             throw new IllegalArgumentException(dir + " is not directory or is not writable");
         }
+        Objects.requireNonNull(resumeSerializer, "resume serializer must not be null");
+        this.resumeSerializer = resumeSerializer;
     }
 
     @Override
@@ -60,11 +60,9 @@ public class PathStorage extends AbstractStorage<Path> {
         }
     }
 
-
-
     @Override
     protected boolean checkIndex(Path path) {
-        return Files.exists(path);
+        return Files.exists(path) && Files.isRegularFile(path);
     }
 
     @Override
@@ -76,8 +74,6 @@ public class PathStorage extends AbstractStorage<Path> {
             throw new StorageException("IO error", path.getFileName().toString(), e);
         }
     }
-
-
 
     @Override
     protected void deleteInternal(Path path) {
@@ -100,9 +96,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected List<Resume> getAllList() {
         try {
-            List<Resume> result = new ArrayList<>();
-            Files.list(directory).forEach((p) -> result.add(getByIndex(p)));
-            return result;
+            return Files.list(directory).map(this::getByIndex).collect(Collectors.toList());
         } catch (IOException e) {
             throw new StorageException("IO error", null, e);
         }
