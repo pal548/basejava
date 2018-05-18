@@ -5,9 +5,13 @@ import ru.javawebinar.basejava.util.LocalDateAdapter;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ExperienceSubRecord implements Serializable {
@@ -47,6 +51,23 @@ public class ExperienceSubRecord implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void writeToDataStream(DataOutputStream dos) throws IOException {
+        dos.writeUTF(dateBeg.toString());
+        dos.writeUTF(dateEnd == null ? "null" : dateEnd.toString());
+        dos.writeUTF(position);
+        dos.writeUTF(description);
+    }
+
+    public void readFromDataStream(DataInputStream dis) throws IOException {
+        dateBeg = LocalDate.parse(dis.readUTF());
+        String dend = dis.readUTF();
+        if (!Objects.equals(dend, "null")) {
+            dateEnd = LocalDate.parse(dend);
+        }
+        position = dis.readUTF();
+        description = dis.readUTF();
     }
 
     @Override

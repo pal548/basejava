@@ -35,7 +35,7 @@ public abstract class AbstractStorageTest {
         R1.addContact(ContactType.FB, "asdfadsf");
 
 
-        /*R1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
+        R1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
         R1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
 
         SectionMultiple sm = new SectionMultiple();
@@ -64,7 +64,7 @@ public abstract class AbstractStorageTest {
 
         R1.addSection(SectionType.EXPERIENCE, sectionExperience);
 
-        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));*/
+        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
     }
 
     public AbstractStorageTest(Storage storage) {
@@ -87,9 +87,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void testGetSave() throws Exception {
-        Resume r = new Resume("Robinson", "Robinson");
-        storage.save(r);
-        assertEquals(r, storage.get(r.getUuid()));
+        assertEquals(R1, storage.get(R1.getUuid()));
     }
 
     @Test(expected = AlreadyExistsException.class)
