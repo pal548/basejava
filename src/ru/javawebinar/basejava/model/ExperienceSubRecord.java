@@ -1,14 +1,22 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ExperienceSubRecord implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate dateBeg;
 
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate dateEnd;
 
     private String position;

@@ -7,6 +7,9 @@ public class SectionSingle extends AbstractSectionData {
 
     private String value;
 
+    public SectionSingle() {
+    }
+
     public SectionSingle(String value) {
         this.value = value;
     }
