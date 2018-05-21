@@ -9,7 +9,6 @@ import java.io.Serializable;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class AbstractSectionData implements Serializable {
-    public abstract void writeToDataStream(DataOutputStream dos) throws IOException;
 
     public abstract void readFromDataStream(DataInputStream dis) throws IOException;
 }

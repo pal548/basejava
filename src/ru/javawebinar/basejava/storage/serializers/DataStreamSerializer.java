@@ -1,15 +1,11 @@
 package ru.javawebinar.basejava.storage.serializers;
 
 import ru.javawebinar.basejava.exception.StorageException;
-import ru.javawebinar.basejava.model.AbstractSectionData;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class DataStreamSerializer implements ResumeSerializer {
 
@@ -19,19 +15,36 @@ public class DataStreamSerializer implements ResumeSerializer {
             dos.writeUTF(r.getUuid());
             dos.writeUTF(r.getFullName());
 
-            Set<Map.Entry<ContactType, String>> set = r.getContacts().entrySet();
-            dos.writeInt(set.size());
-            for (Map.Entry<ContactType, String> e : set) {
+            writeList(dos, r.getContacts().entrySet(), e -> {
                 dos.writeUTF(e.getKey().name());
                 dos.writeUTF(e.getValue());
-            }
+            });
 
             Set<Map.Entry<SectionType, AbstractSectionData>> sectionSet = r.getSections().entrySet();
             dos.writeInt(sectionSet.size());
             for (Map.Entry<SectionType, AbstractSectionData> e : sectionSet) {
                 dos.writeUTF(e.getKey().name());
-                dos.writeUTF(e.getValue().getClass().getName());
-                e.getValue().writeToDataStream(dos);
+                AbstractSectionData section = e.getValue();
+                dos.writeUTF(section.getClass().getName());
+                if (section instanceof SectionSingle) {
+                    dos.writeUTF(((SectionSingle) section).getValue());
+                } else if (section instanceof SectionMultiple) {
+                    SectionMultiple secMult = (SectionMultiple) section;
+                    writeList(dos, secMult.getStrings(), dos::writeUTF);
+                } else if (section instanceof SectionExperience) {
+                    SectionExperience secExp = (SectionExperience) section;
+                    writeList(dos, secExp.getExperienceList(), er -> {
+                        dos.writeUTF(er.getCompany().getName());
+                        dos.writeUTF(er.getCompany().getUrl());
+                        writeList(dos, er.getListExperience(), esr -> {
+                            dos.writeUTF(esr.getDateBeg().toString());
+                            dos.writeUTF(esr.getDateEnd() == null ? "null" : esr.getDateEnd().toString());
+                            dos.writeUTF(esr.getPosition());
+                            dos.writeUTF(esr.getDescription());
+                        });
+                    });
+                }
+
             }
         }
     }
@@ -62,4 +75,18 @@ public class DataStreamSerializer implements ResumeSerializer {
             throw new StorageException("Deserialization error", null, e);
         }
     }
+
+    private static <T> void writeList(DataOutputStream dos, Collection<T> list, DataStreamWriter<T> elementWriter) throws IOException {
+        dos.writeInt(list.size());
+        for (T elem : list) {
+            elementWriter.write(elem);
+        }
+    }
+
+    @FunctionalInterface
+    private interface DataStreamWriter<T> {
+        void write(T t) throws IOException;
+    }
 }
+
+

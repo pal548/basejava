@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.model;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,10 @@ public class SectionMultiple extends AbstractSectionData {
     private List<String> strings = new ArrayList<>();
 
     public SectionMultiple() {
+    }
+
+    public List<String> getStrings() {
+        return strings;
     }
 
     public void addText(String s) {
@@ -35,14 +38,6 @@ public class SectionMultiple extends AbstractSectionData {
     @Override
     public int hashCode() {
         return Objects.hash(strings);
-    }
-
-    @Override
-    public void writeToDataStream(DataOutputStream dos) throws IOException {
-        dos.writeInt(strings.size());
-        for (String s : strings) {
-            dos.writeUTF(s);
-        }
     }
 
     @Override

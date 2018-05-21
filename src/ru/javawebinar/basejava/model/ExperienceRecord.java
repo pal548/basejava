@@ -21,6 +21,14 @@ public class ExperienceRecord implements Serializable {
     public ExperienceRecord() {
     }
 
+    public Link getCompany() {
+        return company;
+    }
+
+    public List<ExperienceSubRecord> getListExperience() {
+        return listExperience;
+    }
+
     public void setCompany(Link company) {
         this.company = company;
     }

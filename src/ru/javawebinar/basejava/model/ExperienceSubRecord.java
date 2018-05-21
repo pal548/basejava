@@ -53,6 +53,22 @@ public class ExperienceSubRecord implements Serializable {
         this.description = description;
     }
 
+    public LocalDate getDateBeg() {
+        return dateBeg;
+    }
+
+    public LocalDate getDateEnd() {
+        return dateEnd;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
     public void writeToDataStream(DataOutputStream dos) throws IOException {
         dos.writeUTF(dateBeg.toString());
         dos.writeUTF(dateEnd == null ? "null" : dateEnd.toString());

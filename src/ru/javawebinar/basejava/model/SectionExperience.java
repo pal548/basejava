@@ -1,7 +1,6 @@
 package ru.javawebinar.basejava.model;
 
 import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +12,10 @@ public class SectionExperience extends AbstractSectionData {
     private List<ExperienceRecord> experienceList = new ArrayList<>();
 
     public SectionExperience() {
+    }
+
+    public List<ExperienceRecord> getExperienceList() {
+        return experienceList;
     }
 
     public void addRecord(ExperienceRecord r) {
@@ -35,14 +38,6 @@ public class SectionExperience extends AbstractSectionData {
     @Override
     public int hashCode() {
         return Objects.hash(experienceList);
-    }
-
-    @Override
-    public void writeToDataStream(DataOutputStream dos) throws IOException {
-        dos.writeInt(experienceList.size());
-        for(ExperienceRecord er : experienceList) {
-            er.writeToDataStream(dos);
-        }
     }
 
     @Override
