@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.model;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,13 +38,4 @@ public class SectionExperience extends AbstractSectionData {
         return Objects.hash(experienceList);
     }
 
-    @Override
-    public void readFromDataStream(DataInputStream dis) throws IOException {
-        int size = dis.readInt();
-        for (int i = 0; i < size; i++) {
-            ExperienceRecord er = new ExperienceRecord();
-            er.readFromDataStream(dis);
-            experienceList.add(er);
-        }
-    }
 }

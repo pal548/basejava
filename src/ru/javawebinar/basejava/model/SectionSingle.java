@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.model;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.Objects;
 
 public class SectionSingle extends AbstractSectionData {
@@ -42,8 +40,4 @@ public class SectionSingle extends AbstractSectionData {
         return Objects.hash(value);
     }
 
-    @Override
-    public void readFromDataStream(DataInputStream dis) throws IOException {
-        value = dis.readUTF();
-    }
 }

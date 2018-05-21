@@ -5,6 +5,7 @@ import ru.javawebinar.basejava.model.*;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.*;
 
 public class DataStreamSerializer implements ResumeSerializer {
@@ -20,9 +21,7 @@ public class DataStreamSerializer implements ResumeSerializer {
                 dos.writeUTF(e.getValue());
             });
 
-            Set<Map.Entry<SectionType, AbstractSectionData>> sectionSet = r.getSections().entrySet();
-            dos.writeInt(sectionSet.size());
-            for (Map.Entry<SectionType, AbstractSectionData> e : sectionSet) {
+            writeList(dos, r.getSections().entrySet(), e -> {
                 dos.writeUTF(e.getKey().name());
                 AbstractSectionData section = e.getValue();
                 dos.writeUTF(section.getClass().getName());
@@ -45,7 +44,7 @@ public class DataStreamSerializer implements ResumeSerializer {
                     });
                 }
 
-            }
+            });
         }
     }
 
@@ -65,7 +64,31 @@ public class DataStreamSerializer implements ResumeSerializer {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 Class<?> clazz = Class.forName(dis.readUTF());
                 AbstractSectionData section = (AbstractSectionData) clazz.getConstructor().newInstance();
-                section.readFromDataStream(dis);
+                if (section instanceof SectionSingle) {
+                    SectionSingle secSingle = (SectionSingle) section;
+                    secSingle.setValue(dis.readUTF());
+                } else if (section instanceof SectionMultiple) {
+                    SectionMultiple sectionMultiple = (SectionMultiple) section;
+                    readList(dis, sectionMultiple.getStrings(), dis::readUTF);
+                } else if (section instanceof SectionExperience) {
+                    SectionExperience secExp = (SectionExperience) section;
+                    readList(dis, secExp.getExperienceList(), () -> {
+                        ExperienceRecord er = new ExperienceRecord();
+                        er.setCompany(new Link(dis.readUTF(), dis.readUTF()));
+                        readList(dis, er.getListExperience(), () -> {
+                            ExperienceSubRecord esr = new ExperienceSubRecord();
+                            esr.setDateBeg(LocalDate.parse(dis.readUTF()));
+                            String dend = dis.readUTF();
+                            if (!Objects.equals(dend, "null")) {
+                                esr.setDateEnd(LocalDate.parse(dend));
+                            }
+                            esr.setPosition(dis.readUTF());
+                            esr.setDescription(dis.readUTF());
+                            return esr;
+                        });
+                        return er;
+                    });
+                }
                 resume.addSection(sectionType, section);
             }
 
@@ -83,9 +106,21 @@ public class DataStreamSerializer implements ResumeSerializer {
         }
     }
 
+    private static <T> void readList(DataInputStream dis, List<T> list, DataStreamReader<T> elemReader) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            list.add(elemReader.read());
+        }
+    }
+
     @FunctionalInterface
     private interface DataStreamWriter<T> {
         void write(T t) throws IOException;
+    }
+
+    @FunctionalInterface
+    private interface DataStreamReader<T> {
+        T read() throws IOException;
     }
 }
 
