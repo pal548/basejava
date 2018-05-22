@@ -22,28 +22,34 @@ public class DataStreamSerializer implements ResumeSerializer {
             });
 
             writeList(dos, r.getSections().entrySet(), e -> {
-                dos.writeUTF(e.getKey().name());
+                SectionType sectionType = e.getKey();
+                dos.writeUTF(sectionType.name());
                 AbstractSectionData section = e.getValue();
                 dos.writeUTF(section.getClass().getName());
-                if (section instanceof SectionSingle) {
-                    dos.writeUTF(((SectionSingle) section).getValue());
-                } else if (section instanceof SectionMultiple) {
-                    SectionMultiple secMult = (SectionMultiple) section;
-                    writeList(dos, secMult.getStrings(), dos::writeUTF);
-                } else if (section instanceof SectionExperience) {
-                    SectionExperience secExp = (SectionExperience) section;
-                    writeList(dos, secExp.getExperienceList(), er -> {
-                        dos.writeUTF(er.getCompany().getName());
-                        dos.writeUTF(er.getCompany().getUrl());
-                        writeList(dos, er.getListExperience(), esr -> {
-                            dos.writeUTF(esr.getDateBeg().toString());
-                            dos.writeUTF(esr.getDateEnd() == null ? "null" : esr.getDateEnd().toString());
-                            dos.writeUTF(esr.getPosition());
-                            dos.writeUTF(esr.getDescription());
+                switch (sectionType) {
+                    case EDUCATION:
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        dos.writeUTF(((SectionSingle) section).getValue());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        writeList(dos, ((SectionMultiple) section).getStrings(), dos::writeUTF);
+                        break;
+                    case EXPERIENCE:
+                        SectionExperience secExp = (SectionExperience) section;
+                        writeList(dos, secExp.getExperienceList(), er -> {
+                            dos.writeUTF(er.getCompany().getName());
+                            dos.writeUTF(er.getCompany().getUrl() == null ? "" : er.getCompany().getUrl());
+                            writeList(dos, er.getListExperience(), esr -> {
+                                dos.writeUTF(esr.getDateBeg().toString());
+                                dos.writeUTF(esr.getDateEnd() == null ? "" : esr.getDateEnd().toString());
+                                dos.writeUTF(esr.getPosition());
+                                dos.writeUTF(esr.getDescription());
+                            });
                         });
-                    });
+                        break;
                 }
-
             });
         }
     }
@@ -64,35 +70,43 @@ public class DataStreamSerializer implements ResumeSerializer {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 Class<?> clazz = Class.forName(dis.readUTF());
                 AbstractSectionData section = (AbstractSectionData) clazz.getConstructor().newInstance();
-                if (section instanceof SectionSingle) {
-                    SectionSingle secSingle = (SectionSingle) section;
-                    secSingle.setValue(dis.readUTF());
-                } else if (section instanceof SectionMultiple) {
-                    SectionMultiple sectionMultiple = (SectionMultiple) section;
-                    readList(dis, sectionMultiple.getStrings(), dis::readUTF);
-                } else if (section instanceof SectionExperience) {
-                    SectionExperience secExp = (SectionExperience) section;
-                    readList(dis, secExp.getExperienceList(), () -> {
-                        ExperienceRecord er = new ExperienceRecord();
-                        er.setCompany(new Link(dis.readUTF(), dis.readUTF()));
-                        readList(dis, er.getListExperience(), () -> {
-                            ExperienceSubRecord esr = new ExperienceSubRecord();
-                            esr.setDateBeg(LocalDate.parse(dis.readUTF()));
-                            String dend = dis.readUTF();
-                            if (!Objects.equals(dend, "null")) {
-                                esr.setDateEnd(LocalDate.parse(dend));
+                switch (sectionType) {
+                    case EDUCATION:
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        ((SectionSingle) section).setValue(dis.readUTF());
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        readList(dis, ((SectionMultiple) section).getStrings(), dis::readUTF);
+                        break;
+                    case EXPERIENCE:
+                        SectionExperience secExp = (SectionExperience) section;
+                        readList(dis, secExp.getExperienceList(), () -> {
+                            ExperienceRecord er = new ExperienceRecord();
+                            String companyName = dis.readUTF();
+                            String url = dis.readUTF();
+                            if ("".equals(url)) {
+                                url = null;
                             }
-                            esr.setPosition(dis.readUTF());
-                            esr.setDescription(dis.readUTF());
-                            return esr;
+                            er.setCompany(new Link(companyName, url));
+                            readList(dis, er.getListExperience(), () -> {
+                                ExperienceSubRecord esr = new ExperienceSubRecord();
+                                esr.setDateBeg(LocalDate.parse(dis.readUTF()));
+                                String dend = dis.readUTF();
+                                if (!Objects.equals(dend, "")) {
+                                    esr.setDateEnd(LocalDate.parse(dend));
+                                }
+                                esr.setPosition(dis.readUTF());
+                                esr.setDescription(dis.readUTF());
+                                return esr;
+                            });
+                            return er;
                         });
-                        return er;
-                    });
+                        break;
                 }
                 resume.addSection(sectionType, section);
             }
-
-
             return resume;
         } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
             throw new StorageException("Deserialization error", null, e);
