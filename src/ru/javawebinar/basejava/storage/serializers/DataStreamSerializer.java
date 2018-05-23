@@ -40,12 +40,12 @@ public class DataStreamSerializer implements ResumeSerializer {
                         SectionExperience secExp = (SectionExperience) section;
                         writeList(dos, secExp.getExperienceList(), er -> {
                             dos.writeUTF(er.getCompany().getName());
-                            dos.writeUTF(er.getCompany().getUrl() == null ? "" : er.getCompany().getUrl());
+                            writeStringNullable(dos, er.getCompany().getUrl());
                             writeList(dos, er.getListExperience(), esr -> {
                                 dos.writeUTF(esr.getDateBeg().toString());
                                 dos.writeUTF(esr.getDateEnd() == null ? "" : esr.getDateEnd().toString());
                                 dos.writeUTF(esr.getPosition());
-                                dos.writeUTF(esr.getDescription());
+                                writeStringNullable(dos, esr.getDescription());
                             });
                         });
                         break;
@@ -81,24 +81,15 @@ public class DataStreamSerializer implements ResumeSerializer {
                         readList(dis, ((SectionMultiple) section).getStrings(), dis::readUTF);
                         break;
                     case EXPERIENCE:
-                        SectionExperience secExp = (SectionExperience) section;
-                        readList(dis, secExp.getExperienceList(), () -> {
+                        readList(dis, ((SectionExperience) section).getExperienceList(), () -> {
                             ExperienceRecord er = new ExperienceRecord();
-                            String companyName = dis.readUTF();
-                            String url = dis.readUTF();
-                            if ("".equals(url)) {
-                                url = null;
-                            }
-                            er.setCompany(new Link(companyName, url));
+                            er.setCompany(new Link(dis.readUTF(), readStringNullable(dis)));
                             readList(dis, er.getListExperience(), () -> {
                                 ExperienceSubRecord esr = new ExperienceSubRecord();
                                 esr.setDateBeg(LocalDate.parse(dis.readUTF()));
-                                String dend = dis.readUTF();
-                                if (!Objects.equals(dend, "")) {
-                                    esr.setDateEnd(LocalDate.parse(dend));
-                                }
+                                esr.setDateEnd(LocalDate.parse(dis.readUTF()));
                                 esr.setPosition(dis.readUTF());
-                                esr.setDescription(dis.readUTF());
+                                esr.setDescription(readStringNullable(dis));
                                 return esr;
                             });
                             return er;
@@ -135,6 +126,15 @@ public class DataStreamSerializer implements ResumeSerializer {
     @FunctionalInterface
     private interface DataStreamReader<T> {
         T read() throws IOException;
+    }
+
+    private static void writeStringNullable(DataOutputStream dos, String s) throws IOException {
+        dos.writeUTF(s == null ? "" : s);
+    }
+
+    private static String readStringNullable(DataInputStream dis) throws IOException {
+        String s = dis.readUTF();
+        return s.equals("") ? null : s;
     }
 }
 

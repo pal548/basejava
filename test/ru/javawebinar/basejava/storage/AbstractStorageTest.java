@@ -5,6 +5,7 @@ import org.junit.Test;
 import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -52,7 +53,7 @@ public abstract class AbstractStorageTest {
 
         ExperienceRecord er = new ExperienceRecord();
         er.setCompany(new Link("Компания 4", "http://company4.ru"));
-        er.addExperience(LocalDate.of(2016, 10, 1), null, "Старший программист", "--текст описания--");
+        er.addExperience(LocalDate.of(2016, 10, 1), DateUtil.NOW, "Старший программист", "--текст описания--");
 
         SectionExperience sectionExperience = new SectionExperience();
         sectionExperience.addRecord(er);
