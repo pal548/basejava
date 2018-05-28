@@ -1,49 +1,42 @@
 package ru.javawebinar.basejava;
 
-import java.util.concurrent.ThreadLocalRandom;
-
-public class MainDeadlock{
+public class MainDeadlock {
     public static void main(String[] args) throws InterruptedException {
-        LockThread t1 = new LockThread();
-        LockThread t2 = new LockThread();
+        Object lock1 = new Object();
+        Object lock2 = new Object();
 
-        t1.setThreadToWait(t2);
-        t2.setThreadToWait(t1);
+        LockThread t1 = new LockThread(lock1, lock2);
+        LockThread t2 = new LockThread(lock2, lock1);
 
         t1.start();
-        Thread.sleep(200);
         t2.start();
 
-        synchronized (t1) {
-            t1.notifyAll();
-        }
     }
 }
 
 class LockThread extends Thread {
 
-    private Thread threadToWait;
+    private Object lock1;
+    private Object lock2;
+
+    LockThread(Object lock1, Object lock2) {
+        this.lock1 = lock1;
+        this.lock2 = lock2;
+    }
 
     @Override
     public void run() {
-        synchronized (threadToWait) {
-            try {
-                threadToWait.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+        synchronized (lock1) {
+//            try {
+//                Thread.sleep(0);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            synchronized (lock2) {
+
             }
         }
-//        try {
-////            int millis = ThreadLocalRandom.current().nextInt(1000);
-////            System.out.println(millis);
-////            Thread.sleep(millis);
-//            threadToWait.join();
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+
     }
 
-    public void setThreadToWait(Thread threadToWait) {
-        this.threadToWait = threadToWait;
-    }
 }
