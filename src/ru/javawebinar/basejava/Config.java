@@ -13,6 +13,9 @@ public class Config {
     private static final String PROPS_FILENAME = "config\\resumes.properties";
     private static String storageDir;
     private static String dbUrl;
+    private static String dbUser;
+    private static String dbPassword;
+
 
     public static Config get() {
         return INSTANCE;
@@ -29,6 +32,9 @@ public class Config {
                 throw new IllegalStateException(storageDir + " is not directory or is not writable");
             }
 
+            dbUrl = props.getProperty("db.url");
+            dbUser = props.getProperty("db.user");
+            dbPassword = props.getProperty("db.password");
 
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS_FILENAME);
@@ -37,5 +43,17 @@ public class Config {
 
     public String getStorageDir() {
         return storageDir;
+    }
+
+    public String getDbUrl() {
+        return dbUrl;
+    }
+
+    public String getDbUser() {
+        return dbUser;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
     }
 }

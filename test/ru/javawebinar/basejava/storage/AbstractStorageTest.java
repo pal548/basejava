@@ -30,7 +30,7 @@ public abstract class AbstractStorageTest {
     protected static final Resume R3 = new Resume(UUID_3, "Аверьянов");
 
     static {
-        R1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
+        /*R1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
         R1.addContact(ContactType.PHONE, "+7(903)134-82-43");
         R1.addContact(ContactType.SKYPE, "fasdfasf");
         R1.addContact(ContactType.VK, "asdfadsf");
@@ -66,7 +66,7 @@ public abstract class AbstractStorageTest {
 
         R1.addSection(SectionType.EXPERIENCE, sectionExperience);
 
-        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
+        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));*/
     }
 
     public AbstractStorageTest(Storage storage) {
