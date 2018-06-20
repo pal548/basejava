@@ -21,9 +21,9 @@ public abstract class AbstractStorageTest {
 
     protected Storage storage;
 
-    private static final String UUID_1 = "uuid1";
-    private static final String UUID_2 = "uuid2";
-    private static final String UUID_3 = "uuid3";
+    private static final String UUID_1 = "5e80094f-7011-4512-a0d1-ed993d6d039e";
+    private static final String UUID_2 = "6bf12e87-6a4a-47d6-822a-a8117f430a20";
+    private static final String UUID_3 = "3e4bfca2-4277-42bc-ad78-4147d625fa73";
 
     protected static final Resume R1 = new Resume(UUID_1, "Иванов");
     protected static final Resume R2 = new Resume(UUID_2, "Петров");
