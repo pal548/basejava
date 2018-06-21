@@ -20,18 +20,16 @@ public class SqlHelper {
         }
     }
 
-    public void execSQL(String sql, PrepareStatementRunner psr) {
+    public <T> T execSQL(String sql, PrepareStatementRunner<T> psr) {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            psr.Run(ps);
+            return psr.Run(ps);
         } catch (SQLException e) {
             throw new RuntimeSQLException(e);
         }
     }
 
-    public void execSQL(String sql) {
-        execSQL(sql, ps -> {
-            ps.execute();
-        });
+    public int execSQL(String sql) {
+        return execSQL(sql, PreparedStatement::executeUpdate);
     }
 
     public void close() {

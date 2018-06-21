@@ -2,6 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.AlreadyExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
+import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.RuntimeSQLException;
 import ru.javawebinar.basejava.sql.SqlHelper;
@@ -28,16 +29,15 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        final Resume[] r = new Resume[1];
-        sqlHelper.execSQL("SELECT * FROM resume r where r.uuid = ?", ps -> {
+        Resume r = sqlHelper.execSQL("SELECT * FROM resume r where r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
                 throw new NotFoundException(uuid);
             }
-            r[0] = new Resume(uuid, rs.getString("full_name"));
+            return new Resume(uuid, rs.getString("full_name"));
         });
-        return r[0];
+        return r;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SqlStorage implements Storage {
             sqlHelper.execSQL("INSERT INTO resume (uuid, full_name) VALUES (?,?)", ps -> {
                 ps.setString(1, r.getUuid());
                 ps.setString(2, r.getFullName());
-                ps.execute();
+                return ps.executeUpdate();
             });
         } catch (RuntimeSQLException e) {
             throw new AlreadyExistsException(r.getUuid(), e);
@@ -55,21 +55,25 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        get(uuid);
-        sqlHelper.execSQL("DELETE FROM resume where uuid = ?", ps -> {
+        int i = sqlHelper.execSQL("DELETE FROM resume where uuid = ?", ps -> {
             ps.setString(1, uuid);
-            ps.execute();
+            return ps.executeUpdate();
         });
-
+        if (i == 0) {
+            throw new NotFoundException(uuid);
+        }
     }
 
     @Override
     public void update(Resume r) {
-        sqlHelper.execSQL("UPDATE resume set full_name = ? where uuid = ?", ps -> {
+        int i = sqlHelper.execSQL("UPDATE resume set full_name = ? where uuid = ?", ps -> {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
-            ps.execute();
+            return ps.executeUpdate();
         });
+        if (i == 0) {
+            throw new NotFoundException(r.getUuid());
+        }
     }
 
     @Override
@@ -80,20 +84,17 @@ public class SqlStorage implements Storage {
             while (rs.next()) {
                 list.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
             }
+            return null;
         });
         return list;
     }
 
     @Override
     public int size() {
-        final int[] result = new int[1];
-        sqlHelper.execSQL("SELECT count(*) FROM resume", (ps) -> {
-
+        return sqlHelper.execSQL("SELECT count(*) FROM resume", ps -> {
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                result[0] = rs.getInt(1);
-            }
+            rs.next();
+            return rs.getInt(1);
         });
-        return result[0];
     }
 }
