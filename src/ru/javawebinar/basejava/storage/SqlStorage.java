@@ -18,10 +18,6 @@ public class SqlStorage implements Storage {
         sqlHelper = new SqlHelper(dbUrl, dbUser, dbPassword);
     }
 
-    public void closeConnection() {
-        sqlHelper.close();
-    }
-
     @Override
     public void clear() {
         sqlHelper.execSQL("DELETE FROM resume");

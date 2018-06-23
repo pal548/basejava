@@ -7,49 +7,30 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SqlHelper {
-    private final Connection connection;
-    private boolean connectionOpened = false;
-    private boolean connectionClosed = false;
+    private final String dbUrl;
+    private final String dbUser;
+    private final String dbPassword;
 
     public SqlHelper(String dbUrl, String dbUser, String dbPassword) {
-        try {
-            connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
-            connectionOpened = true;
-        } catch (SQLException e) {
-            throw new RuntimeSQLException(e);
-        }
+        this.dbUrl = dbUrl;
+        this.dbUser = dbUser;
+        this.dbPassword = dbPassword;
     }
 
     public <T> T execSQL(String sql, PrepareStatementRunner<T> psr) {
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection con = getConnection();
+             PreparedStatement ps = con.prepareStatement(sql)) {
             return psr.Run(ps);
         } catch (SQLException e) {
             throw new RuntimeSQLException(e);
         }
     }
 
+    private Connection getConnection() throws SQLException {
+        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+    }
+
     public int execSQL(String sql) {
         return execSQL(sql, PreparedStatement::executeUpdate);
-    }
-
-    public void close() {
-        try {
-            connection.close();
-        } catch (SQLException e) {
-            throw new RuntimeSQLException(e);
-        } finally {
-            connectionClosed = true;
-        }
-    }
-
-    protected void finalize() {
-        if (connectionOpened && !connectionClosed) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeSQLException(e);
-            }
-        }
-
     }
 }
