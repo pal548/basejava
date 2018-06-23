@@ -45,7 +45,11 @@ public class SqlStorage implements Storage {
                 return ps.executeUpdate();
             });
         } catch (RuntimeSQLException e) {
-            throw new AlreadyExistsException(r.getUuid(), e);
+            if (((SQLException)e.getCause()).getSQLState().equals("23505")) {
+                throw new AlreadyExistsException(r.getUuid(), e);
+            } else {
+                throw e;
+            }
         }
     }
 
