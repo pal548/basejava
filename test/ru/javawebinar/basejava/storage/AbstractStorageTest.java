@@ -3,13 +3,10 @@ package ru.javawebinar.basejava.storage;
 import org.junit.Before;
 import org.junit.Test;
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.exception.AlreadyExistsException;
+import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.*;
-import ru.javawebinar.basejava.util.DateUtil;
 
-import java.io.File;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -92,7 +89,7 @@ public abstract class AbstractStorageTest {
         assertEquals(R1, storage.get(R1.getUuid()));
     }
 
-    @Test(expected = AlreadyExistsException.class)
+    @Test(expected = ExistsException.class)
     public void saveAlreadyExists() {
         Resume r = new Resume(UUID_1, "Иванов");
         storage.save(r);

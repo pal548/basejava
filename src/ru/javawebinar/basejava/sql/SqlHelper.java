@@ -1,6 +1,5 @@
 package ru.javawebinar.basejava.sql;
 
-import javax.management.RuntimeMBeanException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

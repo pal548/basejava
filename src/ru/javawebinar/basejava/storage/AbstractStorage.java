@@ -1,6 +1,6 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.AlreadyExistsException;
+import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.Resume;
 
@@ -25,7 +25,7 @@ public abstract class AbstractStorage<I> implements Storage {
     public void save(Resume r) {
         I i = find(r.getUuid());
         if (checkIndex(i)) {
-            throw new AlreadyExistsException(r.getUuid());
+            throw new ExistsException(r.getUuid());
         } else {
             saveInternal(r, i);
         }

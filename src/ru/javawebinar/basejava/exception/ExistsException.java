@@ -1,13 +1,11 @@
 package ru.javawebinar.basejava.exception;
 
-import ru.javawebinar.basejava.sql.RuntimeSQLException;
-
-public class AlreadyExistsException extends StorageException {
-    public AlreadyExistsException(String uuid) {
+public class ExistsException extends StorageException {
+    public ExistsException(String uuid) {
         super(getTitle(uuid), uuid);
     }
 
-    public AlreadyExistsException(String uuid, Exception e) {
+    public ExistsException(String uuid, Exception e) {
         super(getTitle(uuid), uuid, e);
     }
 

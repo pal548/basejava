@@ -120,7 +120,7 @@ public class MainTestArrayStorage {
             try {
                 ARRAY_STORAGE.save(new Resume(String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000)), UUID.randomUUID().toString(), sections));
                 //ARRAY_STORAGE.save(new Resume());
-            } catch (AlreadyExistsException e) {
+            } catch (ExistsException e) {
                 System.out.println(e.getMessage());
             }
 

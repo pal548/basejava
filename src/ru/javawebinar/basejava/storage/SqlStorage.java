@@ -1,8 +1,7 @@
 package ru.javawebinar.basejava.storage;
 
-import ru.javawebinar.basejava.exception.AlreadyExistsException;
+import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
-import ru.javawebinar.basejava.exception.StorageException;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.sql.RuntimeSQLException;
 import ru.javawebinar.basejava.sql.SqlHelper;
@@ -25,7 +24,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        Resume r = sqlHelper.execSQL("SELECT * FROM resume r where r.uuid = ?", ps -> {
+        return sqlHelper.execSQL("SELECT * FROM resume r where r.uuid = ?", ps -> {
             ps.setString(1, uuid);
             ResultSet rs = ps.executeQuery();
             if (!rs.next()) {
@@ -33,7 +32,6 @@ public class SqlStorage implements Storage {
             }
             return new Resume(uuid, rs.getString("full_name"));
         });
-        return r;
     }
 
     @Override
@@ -46,7 +44,7 @@ public class SqlStorage implements Storage {
             });
         } catch (RuntimeSQLException e) {
             if (((SQLException)e.getCause()).getSQLState().equals("23505")) {
-                throw new AlreadyExistsException(r.getUuid(), e);
+                throw new ExistsException(r.getUuid(), e);
             } else {
                 throw e;
             }
@@ -55,25 +53,27 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        int i = sqlHelper.execSQL("DELETE FROM resume where uuid = ?", ps -> {
+        sqlHelper.execSQL("DELETE FROM resume where uuid = ?", ps -> {
             ps.setString(1, uuid);
-            return ps.executeUpdate();
+            if (ps.executeUpdate() == 0) {
+                throw new NotFoundException(uuid);
+            }
+            return null;
         });
-        if (i == 0) {
-            throw new NotFoundException(uuid);
-        }
+
     }
 
     @Override
     public void update(Resume r) {
-        int i = sqlHelper.execSQL("UPDATE resume set full_name = ? where uuid = ?", ps -> {
+        sqlHelper.execSQL("UPDATE resume set full_name = ? where uuid = ?", ps -> {
             ps.setString(1, r.getFullName());
             ps.setString(2, r.getUuid());
-            return ps.executeUpdate();
+            if (ps.executeUpdate() == 0) {
+                throw new NotFoundException(r.getUuid());
+            }
+            return null;
         });
-        if (i == 0) {
-            throw new NotFoundException(r.getUuid());
-        }
+
     }
 
     @Override

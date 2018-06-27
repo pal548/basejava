@@ -1,7 +1,5 @@
 package ru.javawebinar.basejava.exception;
 
-import ru.javawebinar.basejava.sql.RuntimeSQLException;
-
 public class NotFoundException extends StorageException {
     public NotFoundException(String uuid) {
         super(getTitle(uuid), uuid);
