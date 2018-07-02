@@ -25,6 +25,22 @@ public class SqlHelper {
         }
     }
 
+    public <T> T transactionalExec(TransactionRunner<T> tr) {
+        try(Connection con = getConnection()){
+            try {
+                con.setAutoCommit(false);
+                T res = tr.run(con);
+                con.commit();
+                return res;
+            } catch (SQLException e) {
+                con.rollback();
+                throw new RuntimeSQLException(e);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeSQLException(e);
+        }
+    }
+
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
     }

@@ -27,13 +27,13 @@ public abstract class AbstractStorageTest {
     protected static final Resume R3 = new Resume(UUID_3, "Аверьянов");
 
     static {
-        /*R1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
+        R1.addContact(ContactType.EMAIL, "asdfypret@gmail.com");
         R1.addContact(ContactType.PHONE, "+7(903)134-82-43");
         R1.addContact(ContactType.SKYPE, "fasdfasf");
         R1.addContact(ContactType.VK, "asdfadsf");
         R1.addContact(ContactType.FB, "asdfadsf");
 
-
+        /*
         R1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
         R1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
 
