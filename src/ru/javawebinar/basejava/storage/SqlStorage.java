@@ -4,10 +4,12 @@ import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
-import ru.javawebinar.basejava.sql.RuntimeSQLException;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,29 +57,21 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        try {
-            sqlHelper.transactionalExec(con -> {
-                try (PreparedStatement ps = con.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
-                    ps.setString(1, r.getUuid());
-                    ps.setString(2, r.getFullName());
-                    ps.executeUpdate();
-                } catch (SQLException e) {
-                    if (e.getSQLState().equals("23505")) {
-                        throw new ExistsException(r.getUuid(), e);
-                    } else {
-                        throw e;
-                    }
+        sqlHelper.transactionalExec(con -> {
+            try (PreparedStatement ps = con.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, r.getFullName());
+                ps.executeUpdate();
+            } catch (SQLException e) {
+                if (e.getSQLState().equals("23505")) {
+                    throw new ExistsException(r.getUuid(), e);
+                } else {
+                    throw e;
                 }
-                saveContacts(r.getUuid(), r.getContacts(), con);
-                return null;
-            });
-        } catch (RuntimeSQLException e) {
-            if (((SQLException) e.getCause()).getSQLState().equals("23505")) {
-                throw new ExistsException(r.getUuid(), e);
-            } else {
-                throw e;
             }
-        }
+            saveContacts(r.getUuid(), r.getContacts(), con);
+            return null;
+        });
     }
 
     @Override
