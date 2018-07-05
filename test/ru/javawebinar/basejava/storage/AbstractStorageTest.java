@@ -33,7 +33,7 @@ public abstract class AbstractStorageTest {
         R1.addContact(ContactType.VK, "asdfadsf");
         R1.addContact(ContactType.FB, "asdfadsf");
 
-        /*
+
         R1.addSection(SectionType.PERSONAL, new SectionSingle("--текст личных качеств--"));
         R1.addSection(SectionType.OBJECTIVE, new SectionSingle("--текст позиции--"));
 
@@ -49,6 +49,7 @@ public abstract class AbstractStorageTest {
         sm.addText("--квалификация 3--");
         R1.addSection(SectionType.QUALIFICATIONS, sm);
 
+        /*
         ExperienceRecord er = new ExperienceRecord();
         er.setCompany(new Link("Компания 4", "http://company4.ru"));
         er.addExperience(LocalDate.of(2016, 10, 1), DateUtil.NOW, "Старший программист", "--текст описания--");
@@ -114,7 +115,7 @@ public abstract class AbstractStorageTest {
         r.addContact(ContactType.FB, "2asdfadsf");
 
         storage.update(r);
-        assertTrue(storage.get(r.getUuid()).equals(r));
+        assertEquals(storage.get(r.getUuid()), r);
     }
 
     @Test

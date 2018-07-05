@@ -2,8 +2,7 @@ package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
 
 import java.sql.Connection;
@@ -26,7 +25,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public Resume get(String uuid) {
-        return sqlHelper.execSQL(
+        Resume r = sqlHelper.execSQL(
                 "SELECT * " +
                         "FROM resume r " +
                         "     LEFT JOIN contact c ON r.uuid = c.resume_uuid " +
@@ -38,6 +37,21 @@ public class SqlStorage implements Storage {
                     }
                     return getResumeFromResultSet(rs);
                 });
+        sqlHelper.execSQL("select * " +
+                "from section s " +
+                "WHERE resume_uuid = ?", ps -> {
+            ps.setString(1, uuid);
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            }
+            while (!rs.isAfterLast()) {
+                getSection(rs, r);
+                rs.next();
+            }
+            return null;
+        });
+        return r;
     }
 
     @Override
@@ -55,6 +69,7 @@ public class SqlStorage implements Storage {
                 }
             }
             saveContacts(r.getUuid(), r.getContacts(), con);
+            saveSections(con, r);
             return null;
         });
     }
@@ -86,6 +101,11 @@ public class SqlStorage implements Storage {
                 ps.execute();
             }
             saveContacts(r.getUuid(), r.getContacts(), con);
+            try (PreparedStatement ps = con.prepareStatement("DELETE FROM section s WHERE s.resume_uuid = ?")) {
+                ps.setString(1, r.getUuid());
+                ps.execute();
+            }
+            saveSections(con, r);
             return null;
         });
     }
@@ -121,6 +141,26 @@ public class SqlStorage implements Storage {
                         r = resumes_map.get(uuid);
                     }
                     r.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                    rs.next();
+                }
+            }
+            return null;
+        });
+        sqlHelper.execSQL("Select * " +
+                "from section " +
+                "order by resume_uuid", ps -> {
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            } else {
+                String uuid = null;
+                Resume r = null;
+                while (!rs.isAfterLast()) {
+                    if (!rs.getString("resume_uuid").equals(uuid)) {
+                        uuid = rs.getString("resume_uuid");
+                        r = resumes_map.get(uuid);
+                    }
+                    getSection(rs, r);
                     rs.next();
                 }
             }
@@ -162,6 +202,64 @@ public class SqlStorage implements Storage {
                 }
                 ps.executeBatch();
             }
+        }
+    }
+
+    private void saveSections(Connection con, Resume r) throws SQLException {
+        try (PreparedStatement ps = con.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
+            if (r.getSections().size() > 0) {
+                for (Map.Entry<SectionType, AbstractSectionData> e : r.getSections().entrySet()) {
+                    SectionType type = e.getKey();
+                    ps.setString(1, r.getUuid());
+                    ps.setString(2, type.toString());
+                    String s = null;
+                    switch (type) {
+                        case EDUCATION:
+                        case PERSONAL:
+                        case OBJECTIVE:
+                            s = ((SectionSingle) e.getValue()).getValue();
+                            break;
+                        case ACHIEVEMENT:
+                        case QUALIFICATIONS:
+                            List<String> l = ((SectionMultiple) e.getValue()).getStrings();
+                            StringBuilder val = new StringBuilder();
+                            boolean first = true;
+                            for (String str : l) {
+                                if (!first) {
+                                    val.append('\n');
+                                } else {
+                                    first = false;
+                                }
+                                val.append(str);
+                            }
+                            s = val.toString();
+                            break;
+                    }
+                    ps.setString(3, s);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+        }
+    }
+
+    private void getSection(ResultSet rs, Resume r) throws SQLException {
+        SectionType type = SectionType.valueOf(rs.getString("type"));
+        switch (type) {
+            case EDUCATION:
+            case PERSONAL:
+            case OBJECTIVE:
+                r.addSection(type, new SectionSingle(rs.getString("value")));
+                break;
+            case ACHIEVEMENT:
+            case QUALIFICATIONS:
+                SectionMultiple sec = new SectionMultiple();
+                String[] strs = rs.getString("value").split("\n");
+                for (String s : strs) {
+                    sec.addText(s);
+                }
+                r.addSection(type, sec);
+                break;
         }
     }
 }
