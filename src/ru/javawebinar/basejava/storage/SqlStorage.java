@@ -10,9 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -94,20 +92,41 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        List<Resume> list = new ArrayList<>();
+        Map<String, Resume> resumes_map = new LinkedHashMap<>();
         sqlHelper.execSQL("SELECT * " +
                         "FROM resume r " +
-                        "     LEFT JOIN contact c ON r.uuid = c.resume_uuid  " +
                         "ORDER BY r.full_name, r.uuid",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
                     rs.next();
                     while (!rs.isAfterLast()) {
-                        list.add(getResumeFromResultSet(rs));
+                        String uuid = rs.getString("uuid");
+                        resumes_map.put(uuid, new Resume(uuid, rs.getString("full_name")));
+                        rs.next();
                     }
                     return null;
                 });
-        return list;
+        sqlHelper.execSQL("Select * " +
+                "from contact " +
+                "order by resume_uuid", ps -> {
+            ResultSet rs = ps.executeQuery();
+            if (!rs.next()) {
+                return null;
+            } else {
+                String uuid = null;
+                Resume r = null;
+                while (!rs.isAfterLast()) {
+                    if (!rs.getString("resume_uuid").equals(uuid)) {
+                        uuid = rs.getString("resume_uuid");
+                        r = resumes_map.get(uuid);
+                    }
+                    r.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
+                    rs.next();
+                }
+            }
+            return null;
+        });
+        return new ArrayList<>(resumes_map.values());
     }
 
     @Override
