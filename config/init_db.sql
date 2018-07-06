@@ -21,3 +21,14 @@ CREATE TABLE contact
 );
 CREATE UNIQUE INDEX contact_resume_uuid_type_uindex
   ON contact (resume_uuid, type);
+
+create table section
+(
+  resume_uuid varchar(36) not null
+    constraint section_resume_uuid_fk
+    references resume
+    on delete cascade,
+  value text,
+  type varchar(30)
+);
+
