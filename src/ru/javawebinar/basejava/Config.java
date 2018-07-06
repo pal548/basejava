@@ -10,7 +10,7 @@ import java.util.Properties;
 public class Config {
     private static final Properties props = new Properties();
     private static final Config INSTANCE = new Config();
-    private static final String PROPS_FILENAME = "config\\resumes.properties";
+    private static final String PROPS_FILENAME = "D:\\javaops\\basejava\\config\\resumes.properties";
     private static String storageDir;
     private static String dbUrl;
     private static String dbUser;
