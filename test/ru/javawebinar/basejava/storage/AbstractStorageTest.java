@@ -115,7 +115,7 @@ public abstract class AbstractStorageTest {
         r.addContact(ContactType.FB, "2asdfadsf");
 
         storage.update(r);
-        assertEquals(storage.get(r.getUuid()), r);
+        assertEquals(r, storage.get(r.getUuid()));
     }
 
     @Test
