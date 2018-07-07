@@ -14,6 +14,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
+    private static final Storage storage;
+
+    static {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        storage = new SqlStorage(Config.get().getDbUrl(), Config.get().getDbUser(), Config.get().getDbPassword());
+    }
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
@@ -23,12 +34,7 @@ public class ResumeServlet extends HttpServlet {
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         //String name = request.getParameter("name");
         //response.getWriter().write(name == null ? "hello resumes" : "hello " + name + "!");
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        Storage storage = new SqlStorage(Config.get().getDbUrl(), Config.get().getDbUser(), Config.get().getDbPassword());
+
         List<Resume> resumes = storage.getAllSorted();
         StringBuilder sb = new StringBuilder();
         sb.append("<!DOCTYPE html>\n" +
