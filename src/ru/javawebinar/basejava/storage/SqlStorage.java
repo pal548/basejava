@@ -219,7 +219,6 @@ public class SqlStorage implements Storage {
                     ps.setString(2, type.toString());
                     String s = null;
                     switch (type) {
-                        case EDUCATION:
                         case PERSONAL:
                         case OBJECTIVE:
                             s = ((SectionSingle) e.getValue()).getValue();
@@ -240,19 +239,13 @@ public class SqlStorage implements Storage {
     private void getSection(ResultSet rs, Resume r) throws SQLException {
         SectionType type = SectionType.valueOf(rs.getString("type"));
         switch (type) {
-            case EDUCATION:
             case PERSONAL:
             case OBJECTIVE:
                 r.addSection(type, new SectionSingle(rs.getString("value")));
                 break;
             case ACHIEVEMENT:
             case QUALIFICATIONS:
-                SectionMultiple sec = new SectionMultiple();
-                String[] strs = rs.getString("value").split("\n");
-                for (String s : strs) {
-                    sec.addText(s);
-                }
-                r.addSection(type, sec);
+                r.addSection(type, new SectionMultiple(rs.getString("value").split("\n")));
                 break;
         }
     }
