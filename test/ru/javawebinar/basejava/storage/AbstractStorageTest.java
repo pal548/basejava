@@ -114,6 +114,9 @@ public abstract class AbstractStorageTest {
         r.addContact(ContactType.EMAIL, "2asdfypret@gmail.com");
         r.addContact(ContactType.FB, "2asdfadsf");
 
+        r.addSection(SectionType.OBJECTIVE, new SectionSingle("ghjuhfvvbcn"));
+        r.addSection(SectionType.ACHIEVEMENT, new SectionMultiple("al;sdkfja;sldkfj", "adsfuke;dla"));
+
         storage.update(r);
         assertEquals(r, storage.get(r.getUuid()));
     }
