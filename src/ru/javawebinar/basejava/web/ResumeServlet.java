@@ -30,30 +30,7 @@ public class ResumeServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        request.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        //String name = request.getParameter("name");
-        //response.getWriter().write(name == null ? "hello resumes" : "hello " + name + "!");
-
-        List<Resume> resumes = storage.getAllSorted();
-        StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html>\n" +
-                  "<html>\n" +
-                  "  <head>\n" +
-                  "    <meta charset=\"utf-8\">\n" +
-                  "    <title>Title</title>\n" +
-                  "  </head>\n" +
-                  "  <body>\n");
-        sb.append("<table border=1>\n");
-        for(Resume r : resumes) {
-            sb.append("  <tr>\n");
-            sb.append("      <td>").append(r.getUuid()).append("</td>\n");
-            sb.append("      <td>").append(r.getFullName()).append("</td>\n");
-            sb.append("  </tr>\n");
-        }
-        sb.append("</table>\n" +
-                  "</body>\n" +
-                  "</html>\n");
-        response.getWriter().write(sb.toString());
+        request.setAttribute("resumes", storage.getAllSorted());
+        request.getRequestDispatcher("WEB-INF/jsp/list.jsp").forward(request, response);
     }
 }
