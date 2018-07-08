@@ -24,6 +24,9 @@ CREATE UNIQUE INDEX contact_resume_uuid_type_uindex
 
 create table section
 (
+  id          SERIAL NOT NULL
+    CONSTRAINT section_id_pk
+    PRIMARY KEY,
   resume_uuid varchar(36) not null
     constraint section_resume_uuid_fk
     references resume
@@ -31,4 +34,6 @@ create table section
   value text,
   type varchar(30)
 );
+CREATE UNIQUE INDEX section_resume_uuid_type_uindex
+  ON section (resume_uuid, type);
 
