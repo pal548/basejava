@@ -6,7 +6,9 @@ import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.DateUtil;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -49,7 +51,6 @@ public abstract class AbstractStorageTest {
         sm.addText("--квалификация 3--");
         R1.addSection(SectionType.QUALIFICATIONS, sm);
 
-        /*
         ExperienceRecord er = new ExperienceRecord();
         er.setCompany(new Link("Компания 4", "http://company4.ru"));
         er.addExperience(LocalDate.of(2016, 10, 1), DateUtil.NOW, "Старший программист", "--текст описания--");
@@ -64,7 +65,7 @@ public abstract class AbstractStorageTest {
 
         R1.addSection(SectionType.EXPERIENCE, sectionExperience);
 
-        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));*/
+        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
     }
 
     public AbstractStorageTest(Storage storage) {

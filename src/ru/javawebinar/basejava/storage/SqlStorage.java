@@ -4,6 +4,7 @@ import ru.javawebinar.basejava.exception.ExistsException;
 import ru.javawebinar.basejava.exception.NotFoundException;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.util.JsonParser;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -217,17 +218,7 @@ public class SqlStorage implements Storage {
                     SectionType type = e.getKey();
                     ps.setString(1, r.getUuid());
                     ps.setString(2, type.toString());
-                    String s = null;
-                    switch (type) {
-                        case PERSONAL:
-                        case OBJECTIVE:
-                            s = ((SectionSingle) e.getValue()).getValue();
-                            break;
-                        case ACHIEVEMENT:
-                        case QUALIFICATIONS:
-                            s = String.join("\n", ((SectionMultiple) e.getValue()).getStrings());
-                            break;
-                    }
+                    String s = JsonParser.write(e.getValue(), AbstractSectionData.class);
                     ps.setString(3, s);
                     ps.addBatch();
                 }
@@ -238,15 +229,6 @@ public class SqlStorage implements Storage {
 
     private void getSection(ResultSet rs, Resume r) throws SQLException {
         SectionType type = SectionType.valueOf(rs.getString("type"));
-        switch (type) {
-            case PERSONAL:
-            case OBJECTIVE:
-                r.addSection(type, new SectionSingle(rs.getString("value")));
-                break;
-            case ACHIEVEMENT:
-            case QUALIFICATIONS:
-                r.addSection(type, new SectionMultiple(rs.getString("value").split("\n")));
-                break;
-        }
+        r.addSection(type, JsonParser.read(rs.getString("value"), AbstractSectionData.class));
     }
 }
