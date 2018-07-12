@@ -135,9 +135,7 @@ public class SqlStorage implements Storage {
                             "FROM contact " +
                             "ORDER BY resume_uuid")) {
                 ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    return null;
-                } else {
+                if (rs.next()) {
                     String uuid = null;
                     Resume r = null;
                     while (!rs.isAfterLast()) {
@@ -155,9 +153,7 @@ public class SqlStorage implements Storage {
                             "FROM section " +
                             "ORDER BY resume_uuid")) {
                 ResultSet rs = ps.executeQuery();
-                if (!rs.next()) {
-                    return null;
-                } else {
+                if (rs.next()) {
                     String uuid = null;
                     Resume r = null;
                     while (!rs.isAfterLast()) {
