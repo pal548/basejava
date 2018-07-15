@@ -45,13 +45,16 @@
                     <dl>
                         <dt>${type.title}</dt>
                         <dd>
+                            <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=-1&action=add"><img src="img/add.png"></a><br>
+                            <ul>
                             <c:forEach var="str" items="<%=((SectionMultiple)resume.getSections().get(type)).getStrings()%>" varStatus="loop">
-                                ${str}
-                                <a href="resume/mult_section?uuid=${resume.uuid}&action=add&i=${loop.index}"><img src="img/add.png"></a>
-                                <a href="resume/mult_section?uuid=${resume.uuid}&action=add&i=${loop.index}"><img src="img/delete.png"></a>
-                                <a href="resume/mult_section?uuid=${resume.uuid}&action=add&i=${loop.index}"><img src="img/pencil.png"></a>
-                                <br>
+                                <li>${str}
+                                <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=add"><img src="img/add.png"></a>
+                                <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=delete"><img src="img/delete.png"></a>
+                                <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=edit"><img src="img/pencil.png"></a>
+                                </li>
                             </c:forEach>
+                            </ul>
                         </dd>
                     </dl>
                 </c:when>

@@ -12,4 +12,14 @@
         <servlet-name>resumeServlet</servlet-name>
         <url-pattern>/resume</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>multSectionServlet</servlet-name>
+        <servlet-class>ru.javawebinar.basejava.web.MultipleSectionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>multSectionServlet</servlet-name>
+        <url-pattern>/resume/mult_section</url-pattern>
+    </servlet-mapping>
+
 </web-app>
