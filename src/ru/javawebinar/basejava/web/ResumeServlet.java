@@ -1,8 +1,7 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
-import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.SqlStorage;
 import ru.javawebinar.basejava.storage.Storage;
 
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private static final Storage storage;
@@ -41,6 +39,20 @@ public class ResumeServlet extends HttpServlet {
             }
 
         }
+        for (SectionType type : SectionType.values()) {
+            switch (type) {
+                case OBJECTIVE:
+                case PERSONAL:
+                    String value = request.getParameter(type.name());
+                    if (value == null || value.length() == 0) {
+                        r.getSections().remove(type);
+                    } else {
+                        r.addSection(type, new SectionSingle(value));
+                    }
+
+                    break;
+            }
+        }
         storage.update(r);
         response.sendRedirect("resume");
     }
@@ -62,6 +74,9 @@ public class ResumeServlet extends HttpServlet {
                 case "view":
                 case "edit":
                     r = storage.get(uuid);
+                    if (action.equals("edit")) {
+                        fillResumeWithEnptySections(r);
+                    }
                     break;
                 default:
                     throw new IllegalArgumentException("Action can't be " + action);
@@ -70,6 +85,22 @@ public class ResumeServlet extends HttpServlet {
             request.getRequestDispatcher(
                     ("view".equals(action) ? "/WEB-INF/jsp/view.jsp" : "/WEB-INF/jsp/edit.jsp")
             ).forward(request, response);
+        }
+    }
+
+    private void fillResumeWithEnptySections(Resume r) {
+        for (SectionType type : SectionType.values()) {
+            if (r.getSections().get(type) == null) {
+                switch (type){
+                    case PERSONAL:
+                    case OBJECTIVE:
+                        r.addSection(type, new SectionSingle(""));
+                        break;
+                    case ACHIEVEMENT:
+                    case QUALIFICATIONS:
+                        r.addSection(type, new SectionMultiple());
+                }
+            }
         }
     }
 }

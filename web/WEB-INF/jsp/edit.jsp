@@ -37,7 +37,9 @@
                                  || type == SectionType.OBJECTIVE %>">
                     <dl>
                         <dt>${type.title}</dt>
-                        <dd><input type="text" name="${type.name()}" size=50 value="<%=((SectionSingle)resume.getSections().get(type)).getValue()%>"/></dd>
+                        <%--<c:if test="<%=((SectionSingle)resume.getSections().get(type)) != null%>">--%>
+                            <dd><input type="text" name="${type.name()}" size=50 value="<%=((SectionSingle)resume.getSections().get(type)).getValue()%>"/></dd>
+                        <%--</c:if>--%>
                     </dl>
                 </c:when>
                 <c:when test="<%=type == SectionType.QUALIFICATIONS
@@ -46,15 +48,18 @@
                         <dt>${type.title}</dt>
                         <dd>
                             <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=-1&action=add"><img src="img/add.png"></a><br>
-                            <ul>
-                            <c:forEach var="str" items="<%=((SectionMultiple)resume.getSections().get(type)).getStrings()%>" varStatus="loop">
-                                <li>${str}
-                                <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=add"><img src="img/add.png"></a>
-                                <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=delete"><img src="img/delete.png"></a>
-                                <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=edit"><img src="img/pencil.png"></a>
-                                </li>
-                            </c:forEach>
-                            </ul>
+
+                            <%--<c:if test="((SectionMultiple)resume.getSections().get(type)) != null">--%>
+                                <ul>
+                                <c:forEach var="str" items="<%=((SectionMultiple)resume.getSections().get(type)).getStrings()%>" varStatus="loop">
+                                    <li>${str}
+                                    <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=add"><img src="img/add.png"></a>
+                                    <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=delete"><img src="img/delete.png"></a>
+                                    <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=edit"><img src="img/pencil.png"></a>
+                                    </li>
+                                </c:forEach>
+                                </ul>
+                            <%--</c:if>--%>
                         </dd>
                     </dl>
                 </c:when>
