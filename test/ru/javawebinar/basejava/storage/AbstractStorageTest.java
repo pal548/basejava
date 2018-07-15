@@ -65,7 +65,19 @@ public abstract class AbstractStorageTest {
 
         R1.addSection(SectionType.EXPERIENCE, sectionExperience);
 
-        R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
+        //R1.addSection(SectionType.EDUCATION, new SectionSingle("--текст образования--"));
+        er = new ExperienceRecord();
+        er.setCompany(new Link("МГТУ им.Баумана", "http://company4.ru"));
+        er.addExperience(LocalDate.of(2004, 9, 1), LocalDate.of(2010, 6, 1), "студент", "-- текст описание --");
+
+        sectionExperience = new SectionExperience();
+        sectionExperience.addRecord(er);
+
+        er = new ExperienceRecord();
+        er.setCompany(new Link("МОУ Лицей", ""));
+        er.addExperience(LocalDate.of(1994, 9, 1), LocalDate.of(2004, 6, 1), "ученик", "--текст описания--");
+        sectionExperience.addRecord(er);
+        R1.addSection(SectionType.EDUCATION, sectionExperience);
     }
 
     public AbstractStorageTest(Storage storage) {

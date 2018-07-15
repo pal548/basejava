@@ -27,7 +27,6 @@ public class DataStreamSerializer implements ResumeSerializer {
                 AbstractSectionData section = e.getValue();
                 dos.writeUTF(section.getClass().getName());
                 switch (sectionType) {
-                    case EDUCATION:
                     case PERSONAL:
                     case OBJECTIVE:
                         dos.writeUTF(((SectionSingle) section).getValue());
@@ -37,6 +36,7 @@ public class DataStreamSerializer implements ResumeSerializer {
                         writeList(dos, ((SectionMultiple) section).getStrings(), dos::writeUTF);
                         break;
                     case EXPERIENCE:
+                    case EDUCATION:
                         SectionExperience secExp = (SectionExperience) section;
                         writeList(dos, secExp.getExperienceList(), er -> {
                             dos.writeUTF(er.getCompany().getName());
@@ -71,7 +71,6 @@ public class DataStreamSerializer implements ResumeSerializer {
                 Class<?> clazz = Class.forName(dis.readUTF());
                 AbstractSectionData section = (AbstractSectionData) clazz.getConstructor().newInstance();
                 switch (sectionType) {
-                    case EDUCATION:
                     case PERSONAL:
                     case OBJECTIVE:
                         ((SectionSingle) section).setValue(dis.readUTF());
@@ -81,6 +80,7 @@ public class DataStreamSerializer implements ResumeSerializer {
                         readList(dis, ((SectionMultiple) section).getStrings(), dis::readUTF);
                         break;
                     case EXPERIENCE:
+                    case EDUCATION:
                         readList(dis, ((SectionExperience) section).getExperienceList(), () -> {
                             ExperienceRecord er = new ExperienceRecord();
                             er.setCompany(new Link(dis.readUTF(), readStringNullable(dis)));
