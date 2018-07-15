@@ -1,3 +1,5 @@
+<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
+<%@ page import="ru.javawebinar.basejava.model.SectionSingle" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -18,6 +20,18 @@
                 <%=contactEntry.getKey().toHtml(contactEntry.getValue())%><br/>
         </c:forEach>
     <p>
+    <p>
+        <c:forEach var="sec" items="${resume.sections}">
+            <jsp:useBean id="sec" type="java.util.Map.Entry<ru.javawebinar.basejava.model.SectionType, ru.javawebinar.basejava.model.AbstractSectionData>"/>
+            <c:choose>
+                <c:when test="<%=(sec.getKey() == SectionType.OBJECTIVE)
+                                  || (sec.getKey() == SectionType.PERSONAL)   %>">
+                    <h3><%=sec.getKey().getTitle()%></h3>
+                    <p><%=((SectionSingle)sec.getValue()).getValue()%></p>
+                </c:when>
+            </c:choose>
+        </c:forEach>
+    </p>
 </section>
 <jsp:include page="fragments/footer.jsp"/>
 </body>

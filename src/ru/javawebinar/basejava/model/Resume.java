@@ -18,7 +18,7 @@ public class Resume implements Comparable<Resume>, Serializable {
     private String uuid;
     private String fullName;
 
-    private Map<SectionType, AbstractSectionData> sections = new HashMap<>();
+    private Map<SectionType, AbstractSectionData> sections = new EnumMap<>(SectionType.class);
     private static final List<SectionType> sectionOrder = Arrays.asList(
             SectionType.PERSONAL,
             SectionType.OBJECTIVE,
