@@ -13,16 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
 public class ResumeServlet extends HttpServlet {
-    private static final Storage storage;
-
-    static {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        storage = new SqlStorage(Config.get().getDbUrl(), Config.get().getDbUser(), Config.get().getDbPassword());
-    }
+    private final Storage storage = Config.get().getStorage();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding(StandardCharsets.UTF_8.toString());

@@ -16,7 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MultipleSectionServlet extends HttpServlet {
-    private Storage storage = new SqlStorage(Config.get().getDbUrl(), Config.get().getDbUser(), Config.get().getDbPassword());
+    private final Storage storage = Config.get().getStorage();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding(StandardCharsets.UTF_8.toString());
@@ -27,7 +27,13 @@ public class MultipleSectionServlet extends HttpServlet {
         int index = Integer.parseInt(request.getParameter("index"));
         String value = request.getParameter("value");
         Resume r = storage.get(uuid);
-        List<String> strs = ((SectionMultiple) r.getSections().get(type)).getStrings();
+
+        SectionMultiple sec = (SectionMultiple) r.getSections().get(type);
+        if (sec == null) {
+            sec = new SectionMultiple();
+            r.addSection(type, sec);
+        }
+        List<String> strs = sec.getStrings();
         switch (action) {
             case "edit":
                 strs.remove(index);
@@ -55,9 +61,10 @@ public class MultipleSectionServlet extends HttpServlet {
             return;
         } else {
             Resume r = storage.get(uuid);
-            List<String> strs = ((SectionMultiple) r.getSections().get(type)).getStrings();
+
             switch (action) {
                 case "delete":
+                    List<String> strs = ((SectionMultiple) r.getSections().get(type)).getStrings();
                     strs.remove(index);
                     storage.update(r);
                     response.sendRedirect("/resume?uuid=" + uuid + "&action=edit");
@@ -69,7 +76,7 @@ public class MultipleSectionServlet extends HttpServlet {
                     request.setAttribute("action", action);
                     request.setAttribute("index", index);
                     if (action.equals("edit")) {
-                        request.setAttribute("value", strs.get(index));
+                        request.setAttribute("value", ((SectionMultiple) r.getSections().get(type)).getStrings().get(index));
                     } else {
                         request.setAttribute("value", "");
                     }

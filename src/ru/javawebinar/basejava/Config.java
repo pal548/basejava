@@ -1,5 +1,8 @@
 package ru.javawebinar.basejava;
 
+import ru.javawebinar.basejava.storage.SqlStorage;
+import ru.javawebinar.basejava.storage.Storage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -15,6 +18,7 @@ public class Config {
     private static String dbUrl;
     private static String dbUser;
     private static String dbPassword;
+    private final Storage storage;
 
 
     public static Config get() {
@@ -36,9 +40,20 @@ public class Config {
             dbUser = props.getProperty("db.user");
             dbPassword = props.getProperty("db.password");
 
+            try {
+                Class.forName("org.postgresql.Driver");
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            storage = new SqlStorage(dbUrl,dbUser, dbPassword);
+
         } catch (IOException e) {
             throw new IllegalStateException("Invalid config file " + PROPS_FILENAME);
         }
+    }
+
+    public Storage getStorage() {
+        return storage;
     }
 
     public String getStorageDir() {
