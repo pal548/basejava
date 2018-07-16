@@ -22,4 +22,12 @@
         <url-pattern>/resume/mult_section</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>expSectionRecordServlet</servlet-name>
+        <servlet-class>ru.javawebinar.basejava.web.ExperienceSectionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>expSectionRecordServlet</servlet-name>
+        <url-pattern>/resume/exp_section</url-pattern>
+    </servlet-mapping>
 </web-app>

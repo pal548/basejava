@@ -1,7 +1,4 @@
-<%@ page import="ru.javawebinar.basejava.model.ContactType" %>
-<%@ page import="ru.javawebinar.basejava.model.SectionType" %>
-<%@ page import="ru.javawebinar.basejava.model.SectionSingle" %>
-<%@ page import="ru.javawebinar.basejava.model.SectionMultiple" %>
+<%@ page import="ru.javawebinar.basejava.model.*" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -60,6 +57,35 @@
                                 </c:forEach>
                                 </ul>
                             <%--</c:if>--%>
+                        </dd>
+                    </dl>
+                </c:when>
+
+                <c:when test="<%=type == SectionType.EXPERIENCE
+                                 || type == SectionType.EDUCATION %>">
+                    <dl>
+                        <dt>${type.title}</dt>
+                        <dd>
+                            <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=-1&action=add"><img src="img/add.png"></a><br>
+
+                            <ul>
+                                <c:forEach var="expRec" items="<%=((SectionExperience)resume.getSections().get(type)).getExperienceList()%>" varStatus="loop">
+                                    <jsp:useBean id="expRec" type="ru.javawebinar.basejava.model.ExperienceRecord"/>
+                                    <li>
+                                        <c:choose>
+                                            <c:when test="${expRec.company.url == null || expRec.company.url.length() == 0}">
+                                                ${expRec.company.name}
+                                            </c:when>
+                                            <c:otherwise>
+                                                <a href="${expRec.company.url}">${expRec.company.name}</a>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=add"><img src="img/add.png"></a>
+                                        <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=delete"><img src="img/delete.png"></a>
+                                        <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=edit"><img src="img/pencil.png"></a>
+                                    </li>
+                                </c:forEach>
+                            </ul>
                         </dd>
                     </dl>
                 </c:when>

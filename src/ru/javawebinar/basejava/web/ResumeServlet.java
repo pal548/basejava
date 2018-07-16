@@ -90,6 +90,11 @@ public class ResumeServlet extends HttpServlet {
                     case ACHIEVEMENT:
                     case QUALIFICATIONS:
                         r.addSection(type, new SectionMultiple());
+                        break;
+                    case EXPERIENCE:
+                    case EDUCATION:
+                        r.addSection(type, new SectionExperience());
+                        break;
                 }
             }
         }
