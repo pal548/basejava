@@ -83,6 +83,15 @@
                                         <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=add"><img src="img/add.png"></a>
                                         <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=delete"><img src="img/delete.png"></a>
                                         <a href="resume/exp_section?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&action=edit"><img src="img/pencil.png"></a>
+
+                                        <br>
+                                        <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=-1&action=add"><img src="img/add.png"></a> <br>
+
+                                        <c:set var="index_s" value="${loop.index}" />
+                                        <c:out value = "${index_s}" />
+                                        <%--<% int index = Integer.parseInt("index_s"); %>--%>
+                                        <c:forEach var="sub" items='<%=((SectionExperience)resume.getSections().get(type)).getExperienceList().get(Integer.parseInt("index_s"))%>' varStatus="loop_sub">
+                                        </c:forEach>
                                     </li>
                                 </c:forEach>
                             </ul>

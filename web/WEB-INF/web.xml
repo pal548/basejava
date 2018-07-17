@@ -30,4 +30,15 @@
         <servlet-name>expSectionRecordServlet</servlet-name>
         <url-pattern>/resume/exp_section</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>expSubRecordServlet</servlet-name>
+        <servlet-class>ExpSubRecordServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>expSubRecordServlet</servlet-name>
+        <url-pattern>/resume/exp_sub</url-pattern>
+    </servlet-mapping>
+
+
 </web-app>
