@@ -1,4 +1,6 @@
 <%@ page import="ru.javawebinar.basejava.model.*" %>
+<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="ru.javawebinar.basejava.util.DateUtil" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -87,11 +89,31 @@
                                         <br>
                                         <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=-1&action=add"><img src="img/add.png"></a> <br>
 
-                                        <c:set var="index_s" value="${loop.index}" />
-                                        <c:out value = "${index_s}" />
-                                        <%--<% int index = Integer.parseInt("index_s"); %>--%>
-                                        <c:forEach var="sub" items='<%=((SectionExperience)resume.getSections().get(type)).getExperienceList().get(Integer.parseInt("index_s"))%>' varStatus="loop_sub">
+                                        <c:set var="index" value="${loop.index}" />
+                                        <jsp:useBean id="index" type="java.lang.Integer"/>
+                                        <% DateTimeFormatter df = DateTimeFormatter.ofPattern("MM/yyyy"); %>
+                                        <table cellpadding="4">
+                                        <c:forEach var="sub" items='<%=((SectionExperience)resume.getSections().get(type)).getExperienceList().get(index).getListExperience()%>' varStatus="loop_sub">
+                                            <jsp:useBean id="sub" type="ru.javawebinar.basejava.model.ExperienceSubRecord"/>
+                                            <tr>
+                                                <td style="vertical-align: top">
+                                                    <%= df.format(sub.getDateBeg())%>
+                                                    &nbsp;-&nbsp;
+                                                    <%= sub.getDateEnd().equals(DateUtil.NOW) ? "Сейчас" : df.format(sub.getDateEnd()) %>
+                                                </td>
+                                                <td style="vertical-align: top">
+                                                    <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=${loop_sub.index}&action=add"><img src="img/add.png"></a>
+                                                    <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=${loop_sub.index}&action=delete"><img src="img/delete.png"></a>
+                                                    <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=${loop_sub.index}&action=edit"><img src="img/pencil.png"></a>
+                                                </td>
+                                                <td>
+                                                    <b>${sub.position}</b>
+                                                    <br/>
+                                                    ${sub.description}
+                                                </td>
+                                            </tr>
                                         </c:forEach>
+                                        </table>
                                     </li>
                                 </c:forEach>
                             </ul>
