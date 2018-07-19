@@ -61,25 +61,32 @@
                                 </c:choose>
                                 <br/>
                                 <ul type="disc">
+                                    <table cellpadding="4">
                                     <c:forEach items="<%=expRec.getListExperience()%>" var="expSubRec">
                                         <jsp:useBean id="expSubRec" type="ru.javawebinar.basejava.model.ExperienceSubRecord"/>
-                                        <% Date dbeg = Date.from(expSubRec.getDateBeg().atStartOfDay(ZoneId.systemDefault()).toInstant()); %>
-                                        <fmt:formatDate value="<%=dbeg%>" pattern="yyyy/MM"/>
-                                        -
-                                        <c:choose>
-                                            <c:when test="<%=expSubRec.getDateEnd().equals(DateUtil.NOW)%>">
-                                                по настоящее время
-                                            </c:when>
-                                            <c:otherwise>
-                                                <% Date dend = Date.from(expSubRec.getDateEnd().atStartOfDay(ZoneId.systemDefault()).toInstant()); %>
-                                                <fmt:formatDate value="<%=dend%>" pattern="yyyy/MM"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                        &nbsp;
-                                        ${expSubRec.position}
-                                        <br/>
-                                        ${expSubRec.description}
+                                        <tr>
+                                            <td style="vertical-align: top" width="130">
+                                                <% Date dbeg = Date.from(expSubRec.getDateBeg().atStartOfDay(ZoneId.systemDefault()).toInstant()); %>
+                                                <fmt:formatDate value="<%=dbeg%>" pattern="MM/yyyy"/>
+                                                -
+                                                <c:choose>
+                                                    <c:when test="<%=expSubRec.getDateEnd().equals(DateUtil.NOW)%>">
+                                                        Сейчас
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <% Date dend = Date.from(expSubRec.getDateEnd().atStartOfDay(ZoneId.systemDefault()).toInstant()); %>
+                                                        <fmt:formatDate value="<%=dend%>" pattern="MM/yyyy"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </td>
+                                            <td>
+                                                <b>${expSubRec.position}</b>
+                                                <br/>
+                                                ${expSubRec.description}
+                                            </td>
+                                        </tr>
                                     </c:forEach>
+                                    </table>
                                 </ul>
                             </li>
                         </c:forEach>

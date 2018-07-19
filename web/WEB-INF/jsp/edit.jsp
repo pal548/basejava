@@ -14,6 +14,7 @@
 <jsp:include page="fragments/header.jsp"/>
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
+        <input type="hidden" name="action" value="edit">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
@@ -96,12 +97,12 @@
                                         <c:forEach var="sub" items='<%=((SectionExperience)resume.getSections().get(type)).getExperienceList().get(index).getListExperience()%>' varStatus="loop_sub">
                                             <jsp:useBean id="sub" type="ru.javawebinar.basejava.model.ExperienceSubRecord"/>
                                             <tr>
-                                                <td style="vertical-align: top">
+                                                <td style="vertical-align: top" width="130">
                                                     <%= df.format(sub.getDateBeg())%>
                                                     &nbsp;-&nbsp;
                                                     <%= sub.getDateEnd().equals(DateUtil.NOW) ? "Сейчас" : df.format(sub.getDateEnd()) %>
                                                 </td>
-                                                <td style="vertical-align: top">
+                                                <td style="vertical-align: top" width="62">
                                                     <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=${loop_sub.index}&action=add"><img src="img/add.png"></a>
                                                     <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=${loop_sub.index}&action=delete"><img src="img/delete.png"></a>
                                                     <a href="resume/exp_sub?uuid=${resume.uuid}&type=${type.name()}&i=${loop.index}&i_sub=${loop_sub.index}&action=edit"><img src="img/pencil.png"></a>
@@ -123,8 +124,6 @@
             </c:choose>
         </c:forEach>
 
-        <input type="text" name="section" size=30 value="2"><br/>
-        <input type="text" name="section" size=30 value="3"><br/>
         <hr>
         <button type="submit">Сохранить</button>
         <button onclick="window.history.back()">Отменить</button>

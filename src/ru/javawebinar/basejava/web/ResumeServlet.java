@@ -11,41 +11,49 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
     private final Storage storage = Config.get().getStorage();
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        String uuid = request.getParameter("uuid");
+        String action = request.getParameter("action");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
-        for (ContactType type : ContactType.values()) {
-            String value = request.getParameter(type.name());
-            if ((value == null) || (value.trim().length() == 0)) {
-                r.getContacts().remove(type);
-            } else {
-                r.addContact(type, value);
-            }
+        if (action.equals("add")) {
+            String uuid = UUID.randomUUID().toString();
+            Resume r = new Resume(uuid, fullName);
+            storage.save(r);
+            response.sendRedirect("resume?uuid="+uuid+"&action=edit");
+        } else {
+            String uuid = request.getParameter("uuid");
+            Resume r = storage.get(uuid);
+            r.setFullName(fullName);
+            for (ContactType type : ContactType.values()) {
+                String value = request.getParameter(type.name());
+                if ((value == null) || (value.trim().length() == 0)) {
+                    r.getContacts().remove(type);
+                } else {
+                    r.addContact(type, value);
+                }
 
-        }
-        for (SectionType type : SectionType.values()) {
-            switch (type) {
-                case OBJECTIVE:
-                case PERSONAL:
-                    String value = request.getParameter(type.name());
-                    if (value == null || value.length() == 0) {
-                        r.getSections().remove(type);
-                    } else {
-                        r.addSection(type, new SectionSingle(value));
-                    }
-
-                    break;
             }
+            for (SectionType type : SectionType.values()) {
+                switch (type) {
+                    case OBJECTIVE:
+                    case PERSONAL:
+                        String value = request.getParameter(type.name());
+                        if (value == null || value.length() == 0) {
+                            r.getSections().remove(type);
+                        } else {
+                            r.addSection(type, new SectionSingle(value));
+                        }
+                        break;
+                }
+            }
+            storage.update(r);
+            response.sendRedirect("resume");
         }
-        storage.update(r);
-        response.sendRedirect("resume");
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,6 +66,9 @@ public class ResumeServlet extends HttpServlet {
         } else {
             Resume r;
             switch (action) {
+                case "add":
+                    request.getRequestDispatcher("/WEB-INF/jsp/add.jsp").forward(request, response);
+                    return;
                 case "delete":
                     storage.delete(uuid);
                     response.sendRedirect("resume");
