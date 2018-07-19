@@ -24,7 +24,7 @@ public class ResumeServlet extends HttpServlet {
             String uuid = UUID.randomUUID().toString();
             Resume r = new Resume(uuid, fullName);
             storage.save(r);
-            response.sendRedirect("resume?uuid="+uuid+"&action=edit");
+            response.sendRedirect("resume?uuid="+uuid+"&action=edit&adding=1");
         } else {
             String uuid = request.getParameter("uuid");
             Resume r = storage.get(uuid);

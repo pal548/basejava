@@ -37,19 +37,17 @@
                                  || type == SectionType.OBJECTIVE %>">
                     <dl>
                         <dt>${type.title}</dt>
-                        <%--<c:if test="<%=((SectionSingle)resume.getSections().get(type)) != null%>">--%>
                             <dd><input type="text" name="${type.name()}" size=50 value="<%=((SectionSingle)resume.getSections().get(type)).getValue()%>"/></dd>
-                        <%--</c:if>--%>
                     </dl>
                 </c:when>
-                <c:when test="<%=type == SectionType.QUALIFICATIONS
-                                 || type == SectionType.ACHIEVEMENT %>">
+                <c:when test='<%=(type == SectionType.QUALIFICATIONS
+                                  || type == SectionType.ACHIEVEMENT)
+                               && !"1".equals(request.getParameter("adding")) %>'>
                     <dl>
                         <dt>${type.title}</dt>
                         <dd>
                             <a href="resume/mult_section?uuid=${resume.uuid}&type=${type.name()}&i=-1&action=add"><img src="img/add.png"></a><br>
 
-                            <%--<c:if test="((SectionMultiple)resume.getSections().get(type)) != null">--%>
                                 <ul>
                                 <c:forEach var="str" items="<%=((SectionMultiple)resume.getSections().get(type)).getStrings()%>" varStatus="loop">
                                     <li>${str}
@@ -59,13 +57,13 @@
                                     </li>
                                 </c:forEach>
                                 </ul>
-                            <%--</c:if>--%>
                         </dd>
                     </dl>
                 </c:when>
 
-                <c:when test="<%=type == SectionType.EXPERIENCE
-                                 || type == SectionType.EDUCATION %>">
+                <c:when test='<%=(type == SectionType.EXPERIENCE
+                                  || type == SectionType.EDUCATION)
+                                 && !"1".equals(request.getParameter("adding")) %>'>
                     <dl>
                         <dt>${type.title}</dt>
                         <dd>
