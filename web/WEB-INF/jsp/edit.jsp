@@ -8,13 +8,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
     <jsp:useBean id="resume" type="ru.javawebinar.basejava.model.Resume" scope="request"/>
-    <title>Резюме ${resume.fullName}</title>
+    <jsp:useBean id="action" type="java.lang.String" scope="request"/>
+    <c:choose>
+        <c:when test='${action == "add"}' >
+            <title>Новое резюме</title>
+        </c:when>
+        <c:otherwise>
+            <title>Резюме ${resume.fullName}</title>
+        </c:otherwise>
+    </c:choose>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
 <section>
     <form method="post" action="resume" enctype="application/x-www-form-urlencoded">
-        <input type="hidden" name="action" value="edit">
+        <input type="hidden" name="action" value="${action}">
         <input type="hidden" name="uuid" value="${resume.uuid}">
         <dl>
             <dt>Имя:</dt>
@@ -33,16 +41,16 @@
         <c:forEach var="type" items="<%=SectionType.values()%>">
             <jsp:useBean id="type" type="ru.javawebinar.basejava.model.SectionType"/>
             <c:choose>
-                <c:when test="<%=type == SectionType.PERSONAL
-                                 || type == SectionType.OBJECTIVE %>">
+                <c:when test="${type == SectionType.PERSONAL
+                                 || type == SectionType.OBJECTIVE }">
                     <dl>
                         <dt>${type.title}</dt>
-                            <dd><input type="text" name="${type.name()}" size=50 value="<%=((SectionSingle)resume.getSections().get(type)).getValue()%>"/></dd>
+                        <dd><input type="text" name="${type.name()}" size=50 value='<%=action.equals("add") ? "" : ((SectionSingle)resume.getSections().get(type)).getValue()%>'/></dd>
                     </dl>
                 </c:when>
-                <c:when test='<%=(type == SectionType.QUALIFICATIONS
-                                  || type == SectionType.ACHIEVEMENT)
-                               && !"1".equals(request.getParameter("adding")) %>'>
+                <c:when test='${(type == SectionType.QUALIFICATIONS
+                                 || type == SectionType.ACHIEVEMENT)
+                                && ! (action == "add")}'>
                     <dl>
                         <dt>${type.title}</dt>
                         <dd>
@@ -61,9 +69,9 @@
                     </dl>
                 </c:when>
 
-                <c:when test='<%=(type == SectionType.EXPERIENCE
-                                  || type == SectionType.EDUCATION)
-                                 && !"1".equals(request.getParameter("adding")) %>'>
+                <c:when test='${(type == SectionType.EXPERIENCE
+                                 || type == SectionType.EDUCATION)
+                                && action != "add" }'>
                     <dl>
                         <dt>${type.title}</dt>
                         <dd>

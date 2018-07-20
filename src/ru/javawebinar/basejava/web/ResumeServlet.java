@@ -20,40 +20,48 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding(StandardCharsets.UTF_8.toString());
         String action = request.getParameter("action");
         String fullName = request.getParameter("fullName");
-        if (action.equals("add")) {
-            String uuid = UUID.randomUUID().toString();
-            Resume r = new Resume(uuid, fullName);
-            storage.save(r);
-            response.sendRedirect("resume?uuid="+uuid+"&action=edit&adding=1");
+        String uuid;
+        Resume r;
+        boolean adding = action.equals("add");
+        if (adding) {
+            uuid = UUID.randomUUID().toString();
+            r = new Resume(uuid, fullName);
         } else {
-            String uuid = request.getParameter("uuid");
-            Resume r = storage.get(uuid);
+            uuid = request.getParameter("uuid");
+            r = storage.get(uuid);
             r.setFullName(fullName);
-            for (ContactType type : ContactType.values()) {
-                String value = request.getParameter(type.name());
-                if ((value == null) || (value.trim().length() == 0)) {
-                    r.getContacts().remove(type);
-                } else {
-                    r.addContact(type, value);
-                }
+        }
+        for (ContactType type : ContactType.values()) {
+            String value = request.getParameter(type.name());
+            if ((value == null) || (value.trim().length() == 0)) {
+                r.getContacts().remove(type);
+            } else {
+                r.addContact(type, value);
+            }
 
+        }
+        for (SectionType type : SectionType.values()) {
+            switch (type) {
+                case OBJECTIVE:
+                case PERSONAL:
+                    String value = request.getParameter(type.name());
+                    if (value == null || value.length() == 0) {
+                        r.getSections().remove(type);
+                    } else {
+                        r.addSection(type, new SectionSingle(value));
+                    }
+                    break;
             }
-            for (SectionType type : SectionType.values()) {
-                switch (type) {
-                    case OBJECTIVE:
-                    case PERSONAL:
-                        String value = request.getParameter(type.name());
-                        if (value == null || value.length() == 0) {
-                            r.getSections().remove(type);
-                        } else {
-                            r.addSection(type, new SectionSingle(value));
-                        }
-                        break;
-                }
-            }
+        }
+
+        if (adding) {
+            storage.save(r);
+            response.sendRedirect("resume?uuid="+uuid+"&action=edit");
+        } else {
             storage.update(r);
             response.sendRedirect("resume");
         }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -65,9 +73,11 @@ public class ResumeServlet extends HttpServlet {
             return;
         } else {
             Resume r;
+            request.setAttribute("action", action);
             switch (action) {
                 case "add":
-                    request.getRequestDispatcher("/WEB-INF/jsp/add.jsp").forward(request, response);
+                    request.setAttribute("resume", new Resume());
+                    request.getRequestDispatcher("/WEB-INF/jsp/edit.jsp").forward(request, response);
                     return;
                 case "delete":
                     storage.delete(uuid);
