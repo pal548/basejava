@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class SqlHelper {
     private final String dbUrl;
@@ -42,7 +43,12 @@ public class SqlHelper {
     }
 
     private Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(dbUrl, dbUser, dbPassword);
+        Properties props = new Properties();
+        props.setProperty("user",dbUser);
+        props.setProperty("password",dbPassword);
+        props.setProperty("ssl","true");
+        props.setProperty("sslfactory","org.postgresql.ssl.NonValidatingFactory");
+        return DriverManager.getConnection(dbUrl, props);
     }
 
     public int execSQL(String sql) {
