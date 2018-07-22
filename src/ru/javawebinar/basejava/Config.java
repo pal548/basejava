@@ -13,7 +13,7 @@ import java.util.Properties;
 public class Config {
     private static final Properties props = new Properties();
     private static final Config INSTANCE = new Config();
-    private static final String PROPS_FILENAME = "D:\\javaops\\basejava\\config\\resumes.properties";
+    private static final String PROPS_FILENAME = "/resumes.properties";
     private static String storageDir;
     private static String dbUrl;
     private static String dbUser;
@@ -26,15 +26,15 @@ public class Config {
     }
 
     private Config() {
-        try (InputStream is = Files.newInputStream(Paths.get(PROPS_FILENAME))) {
+        try (InputStream is = Config.class.getResourceAsStream(PROPS_FILENAME)) {
             props.load(is);
 
-            storageDir = props.getProperty("storage.dir");
+            /*storageDir = props.getProperty("storage.dir");
 
             Path dir = Paths.get(storageDir);
             if (!Files.isDirectory(dir) || !Files.isWritable(dir)) {
                 throw new IllegalStateException(storageDir + " is not directory or is not writable");
-            }
+            }*/
 
             dbUrl = props.getProperty("db.url");
             dbUser = props.getProperty("db.user");

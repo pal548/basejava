@@ -1,3 +1,5 @@
+package ru.javawebinar.basejava.web;
+
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.model.*;
 import ru.javawebinar.basejava.storage.Storage;

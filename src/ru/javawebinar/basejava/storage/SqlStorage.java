@@ -123,11 +123,12 @@ public class SqlStorage implements Storage {
                             "FROM resume r " +
                             "ORDER BY r.full_name, r.uuid")) {
                 ResultSet rs = ps.executeQuery();
-                rs.next();
-                while (!rs.isAfterLast()) {
-                    String uuid = rs.getString("uuid");
-                    resumes_map.put(uuid, new Resume(uuid, rs.getString("full_name")));
-                    rs.next();
+                if (rs.next()) {
+                    while (!rs.isAfterLast()) {
+                        String uuid = rs.getString("uuid");
+                        resumes_map.put(uuid, new Resume(uuid, rs.getString("full_name")));
+                        rs.next();
+                    }
                 }
             }
             try (PreparedStatement ps = con.prepareStatement(
